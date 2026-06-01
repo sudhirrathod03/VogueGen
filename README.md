@@ -1,1 +1,1 @@
-# VogueGen
+## Development Setup
