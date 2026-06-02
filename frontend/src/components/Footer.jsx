@@ -54,7 +54,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li>
                 <a 
-                  href="https://github.com" 
+                  href="https://github.com/sudhirrathod03/VogueGen" 
                   target="_blank" 
                   rel="noreferrer" 
                   className="hover:text-[#378ADD] transition-colors duration-150"
@@ -64,7 +64,6 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="https://discord.com" 
                   target="_blank" 
                   rel="noreferrer" 
                   className="hover:text-[#378ADD] transition-colors duration-150"
