@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+import Homepage from "./pages/Homepage";
 function App() {
 
   return (
@@ -9,9 +10,8 @@ function App() {
       <Navbar />
       
       {/* Main App Content Area */}
-      <main className="grow">
-        <h1 className="text-2xl font-bold text-[#2C2C2A]">Welcome to VogueGen</h1>
-        {/* Your other page sections go here */}
+      <main className="max-w-7xl w-full mx-auto px-4 md:px-8 py-8 flex-grow">
+        <Homepage />
       </main>
 
       {/* Footer component sits cleanly at the base */}
