@@ -1,5 +1,5 @@
 import React from "react";
-import heroModel from "../assets/hero_model.png";
+import heroModel from "../assets/hero-img.png";
 
 export default function Hero() {
   return (
@@ -16,7 +16,7 @@ export default function Hero() {
           Personalized high-fashion recommendations and wardrobe curated by artificial intelligence. Experience e-commerce designed for you.
         </p>
         <button
-          className="bg-primary-nav text-white px-8 py-3.5 rounded-sm text-sm font-semibold tracking-wider hover:bg-accent hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 flex items-center gap-3 shadow-md"
+          className="bg-primary-nav cursor-pointer text-white px-8 py-3.5 rounded-sm text-sm font-semibold tracking-wider hover:bg-accent hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 flex items-center gap-3 shadow-md"
         >
           <span>Shop the Collection</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
