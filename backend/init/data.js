@@ -8,9 +8,7 @@ const products = [
     "stock": 45,
     "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop",
     "description": "A minimalist, premium cotton crewneck tee engineered for breathable comfort and a timeless silhouette.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD001"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Slim Fit Black Jeans",
@@ -21,9 +19,7 @@ const products = [
     "stock": 30,
     "image": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&auto=format&fit=crop",
     "description": "Sleek, stretch-fit denim offering maximum mobility with a tailored, modern finish.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD002"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Casual Blue Shirt",
@@ -34,9 +30,7 @@ const products = [
     "stock": 40,
     "image": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&auto=format&fit=crop",
     "description": "Lightweight button-down crafted from breathable linen-blend fabric, perfect for smart-casual weekends.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD003"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Floral Summer Dress",
@@ -47,9 +41,7 @@ const products = [
     "stock": 20,
     "image": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&auto=format&fit=crop",
     "description": "Flowy A-line dress featuring a vibrant botanical print and an adjustable waist tie for sunny days out.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD004"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "High Waist Jeans",
@@ -60,9 +52,7 @@ const products = [
     "stock": 35,
     "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&auto=format&fit=crop",
     "description": "Classic high-rise fit denim hugging the waist perfectly while keeping things effortlessly retro.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD005"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Women's Hoodie",
@@ -73,9 +63,7 @@ const products = [
     "stock": 28,
     "image": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600&auto=format&fit=crop",
     "description": "Ultra-soft fleece hoodie featuring a relaxed fit drop-shoulder layout and spacious front kanga pocket.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD006"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Running Shoes",
@@ -86,9 +74,7 @@ const products = [
     "stock": 50,
     "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop",
     "description": "High-performance mesh trainers equipped with responsive foam cushioning for superior energy return.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD007"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Leather Sneakers",
@@ -99,9 +85,7 @@ const products = [
     "stock": 25,
     "image": "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop",
     "description": "Sleek low-top sneakers crafted from genuine premium leather with a durable vulcanized rubber sole.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD008"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Sports Watch",
@@ -112,9 +96,7 @@ const products = [
     "stock": 18,
     "image": "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=600&auto=format&fit=crop",
     "description": "Rugged, water-resistant multi-function sports watch built with an integrated lap timer and backlighting.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD009"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Leather Wallet",
@@ -125,9 +107,7 @@ const products = [
     "stock": 60,
     "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&auto=format&fit=crop",
     "description": "Slim bifold genuine leather wallet sporting built-in RFID blocking and 6 tailored card slots.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD010"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Wireless Earbuds",
@@ -138,9 +118,7 @@ const products = [
     "stock": 22,
     "image": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&auto=format&fit=crop",
     "description": "True wireless ergonomic earbuds packing active noise cancellation and crisp signature stereo bass.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD011"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Smart Watch",
@@ -151,9 +129,7 @@ const products = [
     "stock": 15,
     "image": "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&auto=format&fit=crop",
     "description": "Next-gen smart wearable boasting dynamic AMOLED touch display alongside 24/7 heart-rate and SpO2 tracking.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD012"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Laptop Backpack",
@@ -164,9 +140,7 @@ const products = [
     "stock": 45,
     "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format&fit=crop",
     "description": "Water-repellent heavy-duty backpack with a dedicated padded compartment for laptops up to 15.6 inches.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD013"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Travel Duffel Bag",
@@ -177,9 +151,7 @@ const products = [
     "stock": 30,
     "image": "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=600&auto=format&fit=crop",
     "description": "Spacious weekend duffel bag built from rugged canvas trim featuring a dynamic shoe isolation pouch.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD014"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Cotton Polo T-Shirt",
@@ -190,9 +162,7 @@ const products = [
     "stock": 55,
     "image": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600&auto=format&fit=crop",
     "description": "Crisp piqué knit cotton polo shirt sporting a structured collar and refined minimalist branding.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD015"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Formal White Shirt",
@@ -203,9 +173,7 @@ const products = [
     "stock": 35,
     "image": "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=600&auto=format&fit=crop",
     "description": "Wrinkle-resistant luxury dress shirt engineered for corporate styling and a clean tapered profile.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD016"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Women's Handbag",
@@ -216,9 +184,7 @@ const products = [
     "stock": 25,
     "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&auto=format&fit=crop",
     "description": "Structured vegan leather tote bag fitted with an organized gold-zipper split inner core layout.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD017"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Summer Top",
@@ -229,9 +195,7 @@ const products = [
     "stock": 40,
     "image": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=600&auto=format&fit=crop",
     "description": "Breezy and light sleeveless blouse optimal for layering or wearing standalone during coastal getaways.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD018"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Bluetooth Speaker",
@@ -242,9 +206,7 @@ const products = [
     "stock": 18,
     "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&auto=format&fit=crop",
     "description": "IPX7 waterproof portable Bluetooth speaker projecting immersive 360-degree bass and 12-hour playback.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD019"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Gaming Mouse",
@@ -255,9 +217,7 @@ const products = [
     "stock": 38,
     "image": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=600&auto=format&fit=crop",
     "description": "Ergonomic gaming mouse boasting an adjustable 16,000 DPI optical sensor and full dynamic RGB backlighting.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD020"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Baseball Cap",
@@ -268,9 +228,7 @@ const products = [
     "stock": 75,
     "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&auto=format&fit=crop",
     "description": "Classic 6-panel cotton twill strapback cap offering dynamic sun protection with a structured curved visor.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD021"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Sunglasses",
@@ -281,9 +239,7 @@ const products = [
     "stock": 30,
     "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop",
     "description": "Polarized retro-style aviator sunglasses with UV400 protective scratch-resistant dark lenses.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD022"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Men's Winter Jacket",
@@ -294,9 +250,7 @@ const products = [
     "stock": 20,
     "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop",
     "description": "Insulated heavy-duty puffer jacket utilizing synthetic down tech to ensure supreme warmth in sub-zero weather.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD023"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Women's Cardigan",
@@ -307,9 +261,7 @@ const products = [
     "stock": 30,
     "image": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&auto=format&fit=crop",
     "description": "Cozy, open-front knit cardigan featuring ribbed cuffs and cozy side drop-in storage pockets.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD024"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Formal Leather Shoes",
@@ -320,9 +272,7 @@ const products = [
     "stock": 22,
     "image": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&auto=format&fit=crop",
     "description": "Hand-stitched genuine leather Oxford dress shoes featuring elegant toe-cap brogue detailing.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD025"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Canvas Shoes",
@@ -333,9 +283,7 @@ const products = [
     "stock": 40,
     "image": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&auto=format&fit=crop",
     "description": "Everyday casual low-top lace-up canvas sneakers with a flexible non-slip honeycomb traction outer sole.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD026"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Power Bank 20000mAh",
@@ -346,9 +294,7 @@ const products = [
     "stock": 28,
     "image": "https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=600&auto=format&fit=crop",
     "description": "Ultra-high capacity power bank supporting 22.5W fast charging equipped with dual USB-A and Type-C delivery hubs.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD027"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Travel Neck Pillow",
@@ -359,9 +305,7 @@ const products = [
     "stock": 50,
     "image": "https://images.unsplash.com/photo-1520116468816-95b69f847357?w=600&auto=format&fit=crop",
     "description": "Ergonomic high-density memory foam neck pillow enclosed within a removable plush washable velour skin.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD028"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Gym Water Bottle",
@@ -372,9 +316,7 @@ const products = [
     "stock": 80,
     "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&auto=format&fit=crop",
     "description": "BPA-free leakproof sports bottle featuring a quick-access flip top straw mechanism and structural volume markings.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD029"
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "name": "Yoga Mat",
@@ -385,11 +327,8 @@ const products = [
     "stock": 35,
     "image": "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=600&auto=format&fit=crop",
     "description": "Eco-friendly, 6mm thick anti-tear TPE cushioning mat ensuring non-slip floor traction for intense workouts.",
-    "colors": ["Black", "White", "Blue"],
-    "sizes": ["S", "M", "L", "XL"],
-    "sku": "PRD030"
+    "sizes": ["S", "M", "L", "XL"]
   }
 ];
-
 
 export default products;

@@ -13,12 +13,7 @@ const productSchema = new mongoose.Schema(
     stock: Number,
     image: String,
     description: String,
-    colors: [String],
     sizes: [String],
-    sku: {
-      type: String,
-      unique: true,
-    },
   },
   {
     timestamps: true,

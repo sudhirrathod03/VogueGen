@@ -17,6 +17,9 @@ const seedDB = async () => {
     await mongoose.connect(dbUrl);
 
     await Product.deleteMany({});
+
+    await Product.collection.dropIndexes();
+    
     await Product.insertMany(products);
     console.log("Data Inserted Successfully");
   } catch (err) {
