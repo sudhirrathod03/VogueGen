@@ -1,9 +1,12 @@
 import React from 'react';
 import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F7F9FC]">
+
+      <Navbar />
       
       {/* Main App Content Area */}
       <main className="grow">
