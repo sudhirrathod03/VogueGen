@@ -8,9 +8,12 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         
         {/* Logo */}
-        <h1 className="text-2xl font-bold">
+        <a
+          href="/"
+          className="text-2xl font-bold cursor-pointer hover:text-gray-300 transition duration-200"
+        >
           VogueGen
-        </h1>
+        </a>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-6">
