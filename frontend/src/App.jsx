@@ -10,7 +10,7 @@ function App() {
   if (isSignupPage) {
     return (
       <div className="min-h-screen bg-bg-page">
-        <main className="min-h-screen px-4 py-8 md:px-8">
+        <main className="min-h-screen p-2 sm:p-4">
           <Signup />
         </main>
       </div>

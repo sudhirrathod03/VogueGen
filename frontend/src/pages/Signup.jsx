@@ -64,27 +64,27 @@ export default function Signup() {
   };
 
   return (
-    <section className="relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden rounded-md border border-border-color bg-[#FBFCFE] px-5 py-10 shadow-sm sm:px-8">
+    <section className="relative isolate flex min-h-[calc(100vh-1rem)] items-center justify-center overflow-hidden rounded-3xl bg-[#FBFCFE] px-3 py-4 sm:px-5 sm:py-6">
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(24,95,165,0.11)_0%,rgba(255,255,255,0)_42%),linear-gradient(315deg,rgba(55,138,221,0.12)_0%,rgba(255,255,255,0)_36%)]" />
 
-      <div className="w-full max-w-124">
-        <div className="rounded-md border border-border-color bg-white px-5 py-8 shadow-xl shadow-primary-nav/10 sm:px-8 sm:py-10">
-          <div className="mb-8 text-center">
-            <a href="/" className="mb-7 inline-block font-serif text-3xl font-bold tracking-tight text-primary-nav">
+      <div className="w-full max-w-md">
+        <div className="rounded-3xl bg-white px-5 py-5 shadow-lg shadow-primary-nav/10 sm:px-6 sm:py-6">
+          <div className="mb-5 text-center">
+            <a href="/" className="mb-4 inline-block font-serif text-2xl font-bold tracking-tight text-primary-nav">
               Vogue<span className="font-normal italic text-accent">Gen</span>
             </a>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Create Account
             </p>
-            <h2 className="mt-3 font-serif text-4xl font-bold text-text-main sm:text-5xl">
+            <h2 className="mt-2 font-serif text-3xl font-bold text-text-main sm:text-4xl">
               Sign up
             </h2>
-            <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-text-muted">
+            <p className="mx-auto mt-2 max-w-sm text-xs leading-5 text-text-muted sm:text-sm">
               Join VogueGen and start saving your AI-powered fashion ideas in one place.
             </p>
           </div>
 
-          <form className="space-y-5" noValidate onSubmit={handleSubmit}>
+          <form className="space-y-3.5" noValidate onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="text-sm font-semibold text-text-main">
                 Name
@@ -99,7 +99,7 @@ export default function Signup() {
                 onChange={handleChange}
                 aria-invalid={Boolean(shouldShowError("name"))}
                 aria-describedby={shouldShowError("name") ? "name-error" : undefined}
-                className="mt-2 w-full rounded-md border border-border-color bg-[#FBFCFE] px-4 py-3.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:border-accent/60 focus:border-accent focus:bg-white focus:ring-3 focus:ring-accent/15"
+                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20"
                 placeholder="Enter your name"
               />
               {shouldShowError("name") && (
@@ -123,7 +123,7 @@ export default function Signup() {
                 onChange={handleChange}
                 aria-invalid={Boolean(shouldShowError("email"))}
                 aria-describedby={shouldShowError("email") ? "email-error" : undefined}
-                className="mt-2 w-full rounded-md border border-border-color bg-[#FBFCFE] px-4 py-3.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:border-accent/60 focus:border-accent focus:bg-white focus:ring-3 focus:ring-accent/15"
+                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20"
                 placeholder="Enter your email"
               />
               {shouldShowError("email") && (
@@ -147,7 +147,7 @@ export default function Signup() {
                 onChange={handleChange}
                 aria-invalid={Boolean(shouldShowError("password"))}
                 aria-describedby={shouldShowError("password") ? "password-error" : "password-help"}
-                className="mt-2 w-full rounded-md border border-border-color bg-[#FBFCFE] px-4 py-3.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:border-accent/60 focus:border-accent focus:bg-white focus:ring-3 focus:ring-accent/15"
+                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20"
                 placeholder="Enter a strong password"
               />
               {shouldShowError("password") ? (
@@ -163,7 +163,7 @@ export default function Signup() {
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-3 rounded-md bg-primary-nav px-6 py-4 text-sm font-semibold tracking-wider text-white shadow-lg shadow-primary-nav/20 transition hover:-translate-y-0.5 hover:bg-accent hover:shadow-xl hover:shadow-accent/25 focus:outline-none focus:ring-3 focus:ring-accent/25"
+              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-nav px-6 py-3 text-sm font-semibold tracking-wider text-white shadow-md shadow-primary-nav/15 transition hover:-translate-y-0.5 hover:bg-accent hover:shadow-lg hover:shadow-accent/20 focus:outline-none focus:ring-2 focus:ring-accent/25"
             >
               <span>Sign Up</span>
               <svg
@@ -184,7 +184,7 @@ export default function Signup() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-text-muted">
+          <p className="mt-5 text-center text-sm text-text-muted">
             Already have an account?{" "}
             <a href="/login" className="font-semibold text-primary-nav hover:text-accent">
               Log in
