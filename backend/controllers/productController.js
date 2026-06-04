@@ -14,6 +14,7 @@ export const createProduct = async (req, res) => {
       description,
       sizes,
     } = req.body;
+
     const newProduct = new Product({
       name,
       category,
@@ -45,7 +46,7 @@ export const getProducts = async (req, res) => {
   }
 };
 
-// to get the single product using id
+// To get single product by ID
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -62,7 +63,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// To update the product
+// To update product
 export const updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -70,6 +71,7 @@ export const updateProduct = async (req, res) => {
       req.body,
       { new: true, runValidators: true }
     );
+
     if (!updatedProduct) {
       return res
         .status(404)
@@ -82,10 +84,11 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// To delete the product
+// To delete product
 export const deleteProduct = async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+
     if (!deletedProduct) {
       return res
         .status(404)
