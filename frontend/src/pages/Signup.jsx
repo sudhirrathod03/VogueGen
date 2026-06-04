@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import axios from 'axios'
 
 const initialValues = {
   name: "",
@@ -52,9 +53,12 @@ export default function Signup() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     setSubmitted(true);
+
+    const res =await axios.post("http://localhost:8080/api/auth/register",values)
+    console.log(res);
 
     if (Object.keys(errors).length === 0) {
       setValues(initialValues);
