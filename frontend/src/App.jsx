@@ -1,23 +1,28 @@
-import React from 'react';
-import Footer from './components/Footer';
-import Navbar from './components/Navbar';
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
 import Homepage from "./pages/Homepage";
+import Login from "./pages/Login";
+
+
+import { Routes, Route } from "react-router-dom";
+
 function App() {
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F9FC]">
-
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      
-      {/* Main App Content Area */}
-      <main className="max-w-7xl w-full mx-auto px-4 md:px-8 py-8 flex-grow">
-        <Homepage />
+
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<Login />} />
+          
+        </Routes>
       </main>
 
-      {/* Footer component sits cleanly at the base */}
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
