@@ -1,6 +1,5 @@
 import Product from "../models/Product.js";
 
-// To create new product
 export const createProduct = async (req, res) => {
   try {
     const {

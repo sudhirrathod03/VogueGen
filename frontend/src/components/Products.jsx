@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Products() {
   const [product, setProduct] = useState([]);
@@ -8,7 +9,7 @@ function Products() {
     async function fetchData() {
       try {
         const res = await axios.get("http://localhost:8080/api/products");
-        setProduct(res.data);
+        setProduct(res.data.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -49,9 +50,12 @@ function Products() {
               </p>
 
               <div className="mt-auto flex items-center justify-between pt-4">
-                <button className="px-5 cursor-pointer py-2 bg-[#185FA5] hover:bg-[#378ADD] text-white text-sm font-medium rounded-full transition-colors duration-300">
+                <Link
+                  to={`/products/${prod._id}`}
+                  className="inline-block px-5 cursor-pointer py-2 bg-[#185FA5] hover:bg-[#378ADD] text-white text-sm font-medium rounded-full transition-colors duration-300"
+                >
                   View Product
-                </button>
+                </Link>
 
                 <span className="text-2xl font-bold text-[#185FA5]">
                   ₹{prod.price}
