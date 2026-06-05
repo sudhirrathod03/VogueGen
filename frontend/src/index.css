@@ -6,6 +6,9 @@
   --color-accent: #378ADD;
   --color-text-main: #2C2C2A;
   --color-text-muted: #5F5E5A;
+  --color-bg-page: #F7F9FC;
+  --color-bg-card: #FFFFFF;
+  --color-border-color: #D9E1EA;
   --font-serif: 'Playfair Display', serif;
 }
 
