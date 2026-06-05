@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Products from "./components/Products";
 import ProductDetails from "./components/ProductDetails";
 import EditProduct from "./components/EditProduct";
+import AddProduct from './components/AddProduct';
 
 import { Routes, Route } from "react-router-dom";
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route  path="/update-product/:id" element={<EditProduct />} />
+          <Route path="/add-product" element={<AddProduct />} />
         </Routes>
       </main>
 
