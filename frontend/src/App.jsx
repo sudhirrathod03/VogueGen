@@ -8,6 +8,9 @@ import ProductDetails from "./components/ProductDetails";
 import EditProduct from "./components/EditProduct";
 import AddProduct from './components/AddProduct';
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { Routes, Route } from "react-router-dom";
 
 function App() {
@@ -27,6 +30,13 @@ function App() {
           <Route path="/add-product" element={<AddProduct />} />
         </Routes>
       </main>
+
+      <ToastContainer  position="top-right"
+  autoClose={3000}
+  hideProgressBar={false}
+  newestOnTop={true}
+  closeOnClick
+  pauseOnHover/>
 
       <Footer />
     </div>

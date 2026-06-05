@@ -1,10 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [product, setProduct] = useState(null);
+ 
 
   useEffect(() => {
     async function fetchProduct() {
@@ -23,6 +27,30 @@ function ProductDetails() {
   if (!product) {
     return <h1 className="text-center mt-10">Loading...</h1>;
   }
+
+  const handleDelete = async () => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this product?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(
+      `http://localhost:8080/api/products/${id}`
+    );
+
+    toast.success("Product deleted successfully");
+
+    setTimeout(() => {
+      navigate("/products");
+    }, 1500);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+
+    toast.error("Failed to delete product");
+  }
+};
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
@@ -75,7 +103,7 @@ function ProductDetails() {
               ))}
             </div>
           </div>
-          
+
           {/* 
           <button className="mt-6 w-fit px-8 py-3 bg-[#185FA5] hover:bg-[#378ADD] text-white rounded-xl font-semibold transition">
             Add To Cart
@@ -92,6 +120,14 @@ function ProductDetails() {
             >
               Edit Product
             </Link>
+
+
+            <button
+              onClick={handleDelete}
+              className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold transition"
+            >
+              Delete Product
+            </button>
           </div>
         </div>
       </div>
