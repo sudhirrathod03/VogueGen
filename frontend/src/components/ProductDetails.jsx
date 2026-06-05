@@ -75,10 +75,24 @@ function ProductDetails() {
               ))}
             </div>
           </div>
-
+          
+          {/* 
           <button className="mt-6 w-fit px-8 py-3 bg-[#185FA5] hover:bg-[#378ADD] text-white rounded-xl font-semibold transition">
             Add To Cart
-          </button>
+          </button> */}
+
+          <div className="flex flex-row items-center gap-4 mt-6">
+            <button className="px-8 py-3 bg-[#185FA5] hover:bg-[#378ADD] text-white rounded-xl font-semibold transition">
+              Add To Cart
+            </button>
+
+            <Link
+              to={`/update-product/${id}`}
+              className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition flex items-center justify-center whitespace-nowrap"
+            >
+              Edit Product
+            </Link>
+          </div>
         </div>
       </div>
     </div>
