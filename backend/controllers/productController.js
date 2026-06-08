@@ -34,14 +34,62 @@ export const createProduct = async (req, res) => {
 };
 
 // To get all the products
+// export const getProducts = async (req, res) => {
+//   try {
+//     const products = await Product.find();
+//     res
+//       .status(200)
+//       .json({ success: true, count: products.length, data: products });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
-    res
-      .status(200)
-      .json({ success: true, count: products.length, data: products });
+    const { search, category, sort } = req.query;
+
+    let filter = {};
+
+    // Search
+    if (search) {
+      filter.name = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    // Category Filter
+    if (category) {
+      filter.category = category;
+    }
+
+    let query = Product.find(filter);
+
+    // Sorting
+    if (sort === "price-asc") {
+      query = query.sort({ price: 1 });
+    }
+
+    if (sort === "price-desc") {
+      query = query.sort({ price: -1 });
+    }
+
+    if (sort === "rating") {
+      query = query.sort({ rating: -1 });
+    }
+
+    const products = await query;
+
+    res.status(200).json({
+      success: true,
+      data: products,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
