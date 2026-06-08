@@ -4,19 +4,46 @@ import { Link } from "react-router-dom";
 
 function Products() {
   const [product, setProduct] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [sort, setSort] = useState("");
+  const [categories, setCategories] = useState([]);
+  
+
+const fetchProducts = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/products",
+      {
+        params: {
+          search,
+          category,
+          sort,
+        },
+      }
+    );
+
+    setProduct(res.data.data);
+
+   
+    if (categories.length === 0) {
+      setCategories([
+        ...new Set(
+          res.data.data.map((item) => item.category)
+        ),
+      ]);
+    }
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await axios.get("http://localhost:8080/api/products");
-        setProduct(res.data.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    }
+  fetchProducts();
+}, [search, category, sort]);
 
-    fetchData();
-  }, []);
+
+
 
   return (
     <div className="min-h-screen bg-[#F7F9FC] p-8">
@@ -49,6 +76,60 @@ function Products() {
           Create New Product
         </Link>
       </div>
+
+
+
+
+      <div className="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row gap-4">
+  <input
+    type="text"
+    placeholder="Search Products..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    className="border border-gray-300 p-3 rounded-xl flex-1"
+  />
+
+  <select
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+    className="border border-gray-300 p-3 rounded-xl"
+  >
+    <option value="">
+      All Categories
+    </option>
+
+    {categories.map((cat) => (
+      <option
+        key={cat}
+        value={cat}
+      >
+        {cat}
+      </option>
+    ))}
+  </select>
+
+  <select
+    value={sort}
+    onChange={(e) => setSort(e.target.value)}
+    className="border border-gray-300 p-3 rounded-xl"
+  >
+    <option value="">
+      Sort By
+    </option>
+
+    <option value="price-asc">
+      Price Low → High
+    </option>
+
+    <option value="price-desc">
+      Price High → Low
+    </option>
+
+    <option value="rating">
+      Highest Rated
+    </option>
+  </select>
+</div>
 
       {/* Grid Layout Container */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
