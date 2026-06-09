@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -32,11 +32,37 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    if (!validate()) return;
+  
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        formData
+      );
+  
+      console.log(res.data);
+  
+      localStorage.setItem("token", res.data.token);
 
-    if (validate()) {
-      console.log("Login Data:", formData);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          _id: res.data._id,
+          name: res.data.name,
+          email: res.data.email,
+        })
+      );
+      
+      navigate("/");
+      window.location.reload();
+  
+      alert("Login Successful");
+  
+    } catch (error) {
+      console.log(error.response?.data);
     }
   };
 

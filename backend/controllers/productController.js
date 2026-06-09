@@ -2,6 +2,7 @@ import Product from "../models/Product.js";
 
 export const createProduct = async (req, res) => {
   try {
+    console.log(req.user);
     const {
       name,
       category,
@@ -15,6 +16,7 @@ export const createProduct = async (req, res) => {
     } = req.body;
 
     const newProduct = new Product({
+      user: req.user.id,
       name,
       category,
       brand,
@@ -25,6 +27,7 @@ export const createProduct = async (req, res) => {
       description,
       sizes,
     });
+    console.log(newProduct);
 
     const saveProduct = await newProduct.save();
     res.status(201).json({ success: true, data: saveProduct });
@@ -113,34 +116,26 @@ export const getProductById = async (req, res) => {
 // To update product
 export const updateProduct = async (req, res) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    Object.assign(req.product, req.body);
 
-    if (!updatedProduct) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
-    }
+    const updatedProduct = await req.product.save();
 
-    res.status(200).json({ success: true, data: updatedProduct });
+    res.status(200).json({
+      success: true,
+      data: updatedProduct,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
 // To delete product
 export const deleteProduct = async (req, res) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-
-    if (!deletedProduct) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
-    }
+    await req.product.deleteOne();
 
     res
       .status(200)

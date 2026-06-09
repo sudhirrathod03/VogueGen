@@ -127,7 +127,16 @@ const EditProduct = () => {
     };
 
     try {
-      await axios.put(`http://localhost:8080/api/products/${id}`, updatedProductData);
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `http://localhost:8080/api/products/${id}`,
+        updatedProductData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setSuccess("Product updated successfully!");
 
       setTimeout(() => {

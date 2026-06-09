@@ -1,3 +1,5 @@
+import protect from "../middleware/authMiddleware.js"
+import isProductOwner from "../middleware/productOwner.js";
 import express from "express";
 import {
   createProduct,
@@ -10,12 +12,12 @@ import {
 const router = express.Router();
 
 router.route("/")
-  .post(createProduct)
+  .post(protect, createProduct)
   .get(getProducts);
 
 router.route("/:id")
   .get(getProductById)
-  .put(updateProduct)
-  .delete(deleteProduct);
+  .put(protect, isProductOwner,updateProduct)
+  .delete(protect,isProductOwner,deleteProduct);
 
 export default router;

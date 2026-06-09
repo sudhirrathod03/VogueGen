@@ -8,13 +8,26 @@ function ProductDetails() {
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
- 
+
+  // 1. Get the current user's ID from the JWT token
+  const token = localStorage.getItem("token"); // Make sure this matches your localStorage key
+  let currentUserId = null;
+  
+  if (token) {
+    try {
+      // Decode the payload of the JWT to extract the user ID
+      const payload = JSON.parse(atob(token.split(".")[1]));
+
+      currentUserId = payload.id; 
+    } catch (e) {
+      console.error("Invalid token");
+    }
+  }
 
   useEffect(() => {
     async function fetchProduct() {
       try {
         const res = await axios.get(`http://localhost:8080/api/products/${id}`);
-
         setProduct(res.data.data);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -29,28 +42,30 @@ function ProductDetails() {
   }
 
   const handleDelete = async () => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this product?"
-  );
-
-  if (!confirmDelete) return;
-
-  try {
-    await axios.delete(
-      `http://localhost:8080/api/products/${id}`
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?"
     );
 
-    toast.success("Product deleted successfully");
+    if (!confirmDelete) return;
 
-    setTimeout(() => {
-      navigate("/products");
-    }, 1500);
-  } catch (error) {
-    console.error("Error deleting product:", error);
+    try {
+      // Pass the token in the headers so the backend allows the deletion
+      await axios.delete(`http://localhost:8080/api/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-    toast.error("Failed to delete product");
-  }
-};
+      toast.success("Product deleted successfully");
+
+      setTimeout(() => {
+        navigate("/products");
+      }, 1500);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product");
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
@@ -104,30 +119,28 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* 
-          <button className="mt-6 w-fit px-8 py-3 bg-[#185FA5] hover:bg-[#378ADD] text-white rounded-xl font-semibold transition">
-            Add To Cart
-          </button> */}
-
           <div className="flex flex-row items-center gap-4 mt-6">
             <button className="px-8 py-3 bg-[#185FA5] hover:bg-[#378ADD] text-white rounded-xl font-semibold transition">
               Add To Cart
             </button>
 
-            <Link
-              to={`/update-product/${id}`}
-              className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition flex items-center justify-center whitespace-nowrap"
-            >
-              Edit Product
-            </Link>
+            {currentUserId === product.user && (
+              <>
+                <Link
+                  to={`/update-product/${id}`}
+                  className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition flex items-center justify-center whitespace-nowrap"
+                >
+                  Edit Product
+                </Link>
 
-
-            <button
-              onClick={handleDelete}
-              className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold transition"
-            >
-              Delete Product
-            </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold transition"
+                >
+                  Delete Product
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
