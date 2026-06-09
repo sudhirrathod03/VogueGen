@@ -57,8 +57,12 @@ export default function Signup() {
     event.preventDefault();
     setSubmitted(true);
 
-    const res =await axios.post("http://localhost:8080/api/auth/register",values)
-    console.log(res);
+    const res = await axios.post(
+      "http://localhost:8080/api/auth/register",
+      values
+    );
+    
+    localStorage.setItem("token", res.data.token);
 
     if (Object.keys(errors).length === 0) {
       setValues(initialValues);

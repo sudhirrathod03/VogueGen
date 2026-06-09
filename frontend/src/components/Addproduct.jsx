@@ -96,8 +96,17 @@ const AddProduct = () => {
     try {
       setLoading(true);
       // Fire a POST request instead of a PUT request
-      await axios.post("http://localhost:8080/api/products", newProductData);
-      setSuccess("Product created successfully!");
+      const token = localStorage.getItem("token");
+
+      await axios.post(
+        "http://localhost:8080/api/products",
+        newProductData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // Clear the form fields after a successful post
       setFormData({
