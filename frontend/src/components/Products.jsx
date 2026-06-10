@@ -136,20 +136,24 @@ const fetchProducts = async () => {
         {product.map((prod) => (
           <div
             key={prod._id}
-            className="bg-[#E8EEF5] border border-[#D3D1C7] rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+            className="bg-[#E8EEF5] border border-[#D3D1C7] rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col relative group"
           >
+            <div className="relative overflow-hidden w-full h-64 bg-bg-card">
             <img
               src={prod.image}
               alt={prod.name}
-              className="w-full h-64 object-cover"
+              className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              loading="lazy"
             />
+            </div>
 
             <div className="p-5 flex flex-col flex-grow">
-              <span className="inline-block bg-[#1D9E75]/10 text-[#1D9E75] px-3 py-1 rounded-full text-sm font-medium mb-3 w-fit">
+              <span className="inline-block bg-bg-card border border-border-color text-primary-nav text-[10px] font-extrabold uppercase  px-3 py-1 rounded-full text-sm  mb-3 w-fit">
                 {prod.category}
               </span>
 
-              <h2 className="text-xl font-bold text-[#2C2C2A] mb-2">
+              {/* Playfair Serif Typography update */}
+              <h2 className="text-xl font-bold font-serif text-[#2C2C2A] mb-2 group-hover:text-primary-nav transition-colors duration-200">
                 {prod.name}
               </h2>
 
@@ -160,7 +164,7 @@ const fetchProducts = async () => {
               <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-200/40">
                 <Link
                   to={`/products/${prod._id}`}
-                  className="inline-block px-5 cursor-pointer py-2 bg-[#185FA5] hover:bg-[#378ADD] text-white text-sm font-medium rounded-full transition-colors duration-300"
+                  className="px-8 py-3 bg-[#185FA5] hover:bg-[#378ADD] text-white rounded-xl font-semibold transition"
                 >
                   View Product
                 </Link>
