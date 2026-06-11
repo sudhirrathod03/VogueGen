@@ -8,6 +8,7 @@ import ProductDetails from "./components/ProductDetails";
 import EditProduct from "./components/EditProduct";
 import AddProduct from "./components/AddProduct";
 import Profile from "./pages/Profile";
+import CartPage from "./pages/CartPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,6 +31,7 @@ function App() {
           <Route path="/update-product/:id" element={<EditProduct />} />
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<CartPage />} />
         </Routes>
       </main>
 
