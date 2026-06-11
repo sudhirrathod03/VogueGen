@@ -5,6 +5,7 @@ import express from "express";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import cors from 'cors'
 
 const app = express();
@@ -16,6 +17,7 @@ connectDB();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 8080;
 

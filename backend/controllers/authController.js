@@ -4,7 +4,7 @@ import generateToken from "../utils/generateToken.js";
 
 export const register = async (req, res) => {
   try {
-    console.log(req.body);
+    
     const { name, email, password } = req.body;
 
     const userExists = await User.findOne({ email });
@@ -34,8 +34,9 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+     
     const user = await User.findOne({ email });
-
+    
     const isMatch = await bcrypt.compare(
       password,
       user.password
