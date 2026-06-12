@@ -41,7 +41,7 @@ export default function Profile() {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8080/api/profile", getAuthConfig());
+        const response = await axios.get("http://localhost:8080/api/users/profile", getAuthConfig());
         const user = response.data?.data || response.data;
         
         const structuredData = {
@@ -136,7 +136,7 @@ export default function Profile() {
       };
       if (editForm.password) payload.password = editForm.password;
 
-      const response = await axios.put("http://localhost:8080/api/profile", payload, getAuthConfig());
+      const response = await axios.put("http://localhost:8080/api/users/profile", payload, getAuthConfig());
       const updatedUser = response.data?.data || response.data;
 
       const updatedState = {
