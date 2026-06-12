@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -8,6 +9,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
+
+  // for add to cart 
+  const [cartCount, setCartCount] = useState(0);
 
   // Fallback state initialization block for demonstration purposes
   useEffect(() => {
@@ -49,6 +53,51 @@ export default function Navbar() {
 
     navigate("/");
   };
+
+
+// Add to cart 
+  useEffect(() => {
+  fetchCartCount();
+
+  window.addEventListener(
+    "cartUpdated",
+    fetchCartCount
+  );
+
+  return () => {
+    window.removeEventListener(
+      "cartUpdated",
+      fetchCartCount
+    );
+  };
+}, []);
+
+  const fetchCartCount = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    const { data } = await axios.get(
+      "http://localhost:8080/api/cart",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const count =
+      data?.items?.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      ) || 0;
+
+    setCartCount(count);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const menuItems = [
     { label: "Home", href: "/" },
@@ -215,7 +264,7 @@ export default function Navbar() {
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
             <span className="absolute top-0.5 right-0.5 bg-blue-600 text-white text-[9px] font-bold min-w-4 h-4 rounded-full flex items-center justify-center p-0.5 shadow-sm transform translate-x-1/12 -translate-y-1/12 group-hover:scale-110 transition-transform duration-300">
-              3
+              {cartCount}
             </span>
           </Link>
         </div>
@@ -304,7 +353,7 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-blue-600"
             >
-              🛒 Cart (3)
+              🛒 Cart ({cartCount})
             </Link>
           </div>
         </div>
