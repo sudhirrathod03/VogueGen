@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import axios from 'axios'
-
+import { useNavigate } from "react-router-dom";
 const initialValues = {
   name: "",
   email: "",
@@ -13,7 +13,7 @@ export default function Signup() {
   const [values, setValues] = useState(initialValues);
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
-
+  const navigate = useNavigate();
   const errors = useMemo(() => {
     const nextErrors = {};
 
@@ -53,21 +53,29 @@ export default function Signup() {
     }));
   };
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitted(true);
-
-    const res = await axios.post(
-      "http://localhost:8080/api/auth/register",
-      values
-    );
-    
-    localStorage.setItem("token", res.data.token);
-
-    if (Object.keys(errors).length === 0) {
+  
+    // Stop if validation errors exist
+    if (Object.keys(errors).length > 0) return;
+  
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/register",
+        values
+      );
+  
+      localStorage.setItem("token", res.data.token);
+  
       setValues(initialValues);
       setTouched({});
       setSubmitted(false);
+  
+      // Redirect to login page
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
     }
   };
 
