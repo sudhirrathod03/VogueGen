@@ -59,6 +59,7 @@ function Products() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
+              strokeWidth="2"
               d="M12 4.5v15m7.5-7.5h-15"
             />
           </svg>
@@ -95,11 +96,8 @@ function Products() {
           className="border border-gray-300 p-3 rounded-xl"
         >
           <option value="">Sort By</option>
-
           <option value="price-asc">Price Low → High</option>
-
           <option value="price-desc">Price High → Low</option>
-
           <option value="rating">Highest Rated</option>
         </select>
       </div>
@@ -107,12 +105,8 @@ function Products() {
       {/* Grid Layout Container */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {product.map((prod) => (
-          <>
-          <Link to={`/products/${prod._id}`}>
-            <div
-              key={prod._id}
-              className="bg-[#E8EEF5] border border-[#D3D1C7] rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col relative group"
-            >
+          <Link to={`/products/${prod._id}`} key={prod._id} className="block">
+            <div className="bg-[#E8EEF5] border border-[#D3D1C7] rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col relative group h-full">
               <div className="relative overflow-hidden w-full h-64 bg-bg-card">
                 <img
                   src={prod.image}
@@ -123,11 +117,10 @@ function Products() {
               </div>
 
               <div className="p-5 flex flex-col flex-grow">
-                <span className="inline-block bg-bg-card border border-border-color text-primary-nav text-[10px] font-extrabold uppercase  px-3 py-1 rounded-full text-sm  mb-3 w-fit">
+                <span className="inline-block bg-bg-card border border-border-color text-primary-nav text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-sm mb-3 w-fit">
                   {prod.category}
                 </span>
 
-                {/* Playfair Serif Typography update */}
                 <h2 className="text-xl font-bold font-serif text-[#2C2C2A] mb-2 group-hover:text-primary-nav transition-colors duration-200">
                   {prod.name}
                 </h2>
@@ -147,8 +140,7 @@ function Products() {
                 </div>
               </div>
             </div>
-            </Link>
-          </>
+          </Link>
         ))}
       </div>
     </div>
