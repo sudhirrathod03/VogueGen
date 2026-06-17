@@ -13,21 +13,17 @@ export default function Navbar() {
   // for add to cart 
   const [cartCount, setCartCount] = useState(0);
 
-  // Fallback state initialization block for demonstration purposes
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    try {
       setUser(JSON.parse(storedUser));
-    } else {
-      const demoUser = {
-        name: "Demo User",
-        email: "demo.user@voguegen.com",
-      };
-      localStorage.setItem("user", JSON.stringify(demoUser));
-      localStorage.setItem("token", "mock-session-jwt-token");
-      setUser(demoUser);
+    } catch (error) {
+      console.error("Error parsing user from localStorage", error);
     }
-  }, []);
+  }
+}, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
