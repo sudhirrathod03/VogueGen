@@ -54,7 +54,7 @@ function ProductDetails() {
           params: { category: product.category },
         });
         const filtered = res.data.data.filter(
-          (item) => item._id !== product._id,
+          (item) => item._id !== product._id
         );
         setRelatedProducts(filtered.slice(0, 3));
       } catch (err) {
@@ -66,7 +66,7 @@ function ProductDetails() {
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?",
+      "Are you sure you want to delete this product?"
     );
 
     if (!confirmDelete) return;
@@ -109,7 +109,7 @@ function ProductDetails() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       window.dispatchEvent(new Event("cartUpdated"));
@@ -255,7 +255,11 @@ function ProductDetails() {
               }`}
             >
               <span
-                className={`w-1.5 h-1.5 rounded-full ${product.stock > 0 ? "bg-emerald-500 animate-pulse" : "bg-red-500"}`}
+                className={`w-1.5 h-1.5 rounded-full ${
+                  product.stock > 0
+                    ? "bg-emerald-500 animate-pulse"
+                    : "bg-red-500"
+                }`}
               />
               {product.stock > 0 ? `${product.stock} in stock` : "Out of Stock"}
             </span>
@@ -371,21 +375,21 @@ function ProductDetails() {
           </div>
 
           {currentUserId === product.user && (
-            <>
+            <div className="flex gap-3 mb-8">
               <Link
                 to={`/update-product/${id}`}
-                className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition flex items-center justify-center whitespace-nowrap"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl border border-primary-nav/20 bg-primary-nav/5 text-primary-nav font-semibold hover:bg-primary-nav hover:text-white transition-all duration-300"
               >
-                Edit Product
+                ✏️ Edit Product
               </Link>
 
               <button
                 onClick={handleDelete}
-                className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold transition"
+                className="flex-1 flex items-center cursor-pointer justify-center gap-2 py-3 rounded-2xl border border-red-200 bg-white text-red-600 font-semibold hover:bg-red-50 transition-all duration-300"
               >
-                Delete Product
+                🗑️ Delete Product
               </button>
-            </>
+            </div>
           )}
           {/* Tabbed Product Details */}
           <div className="border border-border-color rounded-2xl overflow-hidden bg-white">
