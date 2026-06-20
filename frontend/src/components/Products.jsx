@@ -8,6 +8,8 @@ function Products() {
   const [category, setCategory] = useState("");
   const [sort, setSort] = useState("");
   const [categories, setCategories] = useState([]);
+  const token = localStorage.getItem("token");
+
 
   const fetchProducts = async () => {
     try {
@@ -45,26 +47,28 @@ function Products() {
         </div>
 
         {/* Top-Right "+ Add Product" Link Action Button */}
-        <Link
-          to="/add-product"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#185FA5] hover:bg-[#378ADD] text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-300 active:scale-95 whitespace-nowrap"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            strokeWidth="2.5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          Create New Product
-        </Link>
+{token && (
+  <Link
+    to="/add-product"
+    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#185FA5] hover:bg-[#378ADD] text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-300 active:scale-95 whitespace-nowrap"
+  >
+    <svg
+      className="w-4 h-4"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth="2.5"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 4.5v15m7.5-7.5h-15"
+      />
+    </svg>
+
+    Create New Product
+  </Link>
+)}
       </div>
 
       <div className="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row gap-4">
