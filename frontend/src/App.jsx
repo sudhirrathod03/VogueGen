@@ -13,7 +13,7 @@ import CartPage from "./pages/CartPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -28,10 +28,31 @@ function App() {
           <Route path="/register" element={<Signup />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/update-product/:id" element={<EditProduct />} />
-          <Route path="/add-product" element={<AddProduct />} />
+          <Route
+            path="/update-product/:id"
+            element={
+              localStorage.getItem("token") ? (
+                <EditProduct />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+
+          {/* <Route path="/add-product" element={<AddProduct />} />
+           */}
+          <Route
+            path="/add-product"
+            element={
+              localStorage.getItem("token") ? (
+                <AddProduct />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
           <Route path="/profile" element={<Profile />} />
-            <Route path="/cart" element={<CartPage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Routes>
       </main>
 
