@@ -8,22 +8,16 @@ export default function Navbar() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [user, setUser] = useState(null);
+const [user, setUser] = useState(() => {
+  const storedUser = localStorage.getItem("user");
+
+  return storedUser
+    ? JSON.parse(storedUser)
+    : null;
+});
 
   // for add to cart 
   const [cartCount, setCartCount] = useState(0);
-
-
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    try {
-      setUser(JSON.parse(storedUser));
-    } catch (error) {
-      console.error("Error parsing user from localStorage", error);
-    }
-  }
-}, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -38,18 +32,46 @@ useEffect(() => {
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  setUser(null);
+  setCartCount(0);
+  setIsDropdownOpen(false);
+  setIsOpen(false);
 
-    setUser(null);
-    setIsDropdownOpen(false);
-    setIsOpen(false);
+  window.dispatchEvent(
+    new Event("authChanged")
+  );
 
-    navigate("/");
+  navigate("/");
+};
+
+useEffect(() => {
+  const handleAuthChange = () => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
+    }
   };
 
+  window.addEventListener(
+    "authChanged",
+    handleAuthChange
+  );
+
+  return () => {
+    window.removeEventListener(
+      "authChanged",
+      handleAuthChange
+    );
+  };
+}, []);
 
 // Add to cart 
   useEffect(() => {
@@ -259,9 +281,11 @@ useEffect(() => {
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span className="absolute top-0.5 right-0.5 bg-blue-600 text-white text-[9px] font-bold min-w-4 h-4 rounded-full flex items-center justify-center p-0.5 shadow-sm transform translate-x-1/12 -translate-y-1/12 group-hover:scale-110 transition-transform duration-300">
-              {cartCount}
-            </span>
+{cartCount > 0 && (
+  <span className="absolute top-0.5 right-0.5 bg-blue-600 text-white text-[9px] font-bold min-w-4 h-4 rounded-full flex items-center justify-center p-0.5 shadow-sm">
+    {cartCount}
+  </span>
+)}
           </Link>
         </div>
 

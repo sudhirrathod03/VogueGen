@@ -56,9 +56,12 @@ function Login() {
           email: res.data.email,
         })
       );
-      
-      navigate("/");
-      window.location.reload();
+
+window.dispatchEvent(
+  new Event("authChanged")
+);
+
+navigate("/");
   
       alert("Login Successful");
   
