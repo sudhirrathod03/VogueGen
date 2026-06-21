@@ -54,6 +54,12 @@ export const getCart = async (req, res) => {
       user: req.user.id,
     }).populate("items.product");
 
+        if (!cart) {
+      return res.status(200).json({
+        items: [],
+      });
+    }
+
     res.status(200).json(cart);
   } catch (error) {
     res.status(500).json({
