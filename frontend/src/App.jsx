@@ -1,14 +1,15 @@
+import { lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Homepage from "./pages/Homepage";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Products from "./components/Products";
-import ProductDetails from "./components/ProductDetails";
-import EditProduct from "./components/EditProduct";
-import AddProduct from "./components/AddProduct";
-import Profile from "./pages/Profile";
-import CartPage from "./pages/CartPage";
+const Homepage = lazy(() => import("./pages/Homepage"));
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Products = lazy(() => import("./components/Products"));
+const ProductDetails = lazy(() => import("./components/ProductDetails"));
+const EditProduct = lazy(() => import("./components/EditProduct"));
+const AddProduct = lazy(() => import("./components/AddProduct"));
+const Profile = lazy(() => import("./pages/Profile"));
+const CartPage = lazy(() => import("./pages/CartPage"));
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,39 +22,41 @@ function App() {
       <Navbar />
 
       <main className="max-w-7xl w-full mx-auto px-4 md:px-8 py-8 grow">
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/register" element={<Signup />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetails />} />
-          <Route
-            path="/update-product/:id"
-            element={
-              localStorage.getItem("token") ? (
-                <EditProduct />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/register" element={<Signup />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
 
-          {/* <Route path="/add-product" element={<AddProduct />} />
-           */}
-          <Route
-            path="/add-product"
-            element={
-              localStorage.getItem("token") ? (
-                <AddProduct />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/cart" element={<CartPage />} />
-        </Routes>
+            <Route
+              path="/update-product/:id"
+              element={
+                localStorage.getItem("token") ? (
+                  <EditProduct />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+
+            <Route
+              path="/add-product"
+              element={
+                localStorage.getItem("token") ? (
+                  <AddProduct />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<CartPage />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <ToastContainer
