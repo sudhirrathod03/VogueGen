@@ -13,6 +13,7 @@ function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
+   const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
   // 1. Get the current user's ID from the JWT token
   const token = localStorage.getItem("token"); // Make sure this matches your localStorage key
@@ -33,7 +34,7 @@ function ProductDetails() {
     async function fetchProduct() {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:8080/api/products/${id}`);
+        const res = await axios.get(`${BASE_URL}/api/products/${id}`);
         setProduct(res.data.data);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -50,7 +51,7 @@ function ProductDetails() {
     async function fetchRelated() {
       if (!product) return;
       try {
-        const res = await axios.get("http://localhost:8080/api/products", {
+        const res = await axios.get(`${BASE_URL}/api/products`, {
           params: { category: product.category },
         });
         const filtered = res.data.data.filter(
@@ -73,7 +74,7 @@ function ProductDetails() {
 
     try {
       // Pass the token in the headers so the backend allows the deletion
-      await axios.delete(`http://localhost:8080/api/products/${id}`, {
+      await axios.delete(`${BASE_URL}/api/products/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +101,7 @@ function ProductDetails() {
       }
 
       await axios.post(
-        "http://localhost:8080/api/cart",
+        `${BASE_URL}/api/cart`,
         {
           productId: product._id,
           quantity: quantity,

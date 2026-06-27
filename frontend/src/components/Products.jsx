@@ -9,11 +9,12 @@ function Products() {
   const [sort, setSort] = useState("");
   const [categories, setCategories] = useState([]);
   const token = localStorage.getItem("token");
+  const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/products", {
+      const res = await axios.get(`${BASE_URL}/api/products`, {
         params: {
           search,
           category,

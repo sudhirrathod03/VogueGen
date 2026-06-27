@@ -8,6 +8,7 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+   const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
   const [formData, setFormData] = useState({
     name: "",
@@ -99,7 +100,7 @@ const AddProduct = () => {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "http://localhost:8080/api/products",
+        `${BASE_URL}/api/products`,
         newProductData,
         {
           headers: {

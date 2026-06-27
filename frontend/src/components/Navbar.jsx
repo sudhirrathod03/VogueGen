@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+const BASE_URL= import.meta.env.VITE_BACKEND_URL
+
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 const [user, setUser] = useState(() => {
   const storedUser = localStorage.getItem("user");
-
+   
   return storedUser
     ? JSON.parse(storedUser)
     : null;
@@ -97,7 +99,7 @@ useEffect(() => {
     if (!token) return;
 
     const { data } = await axios.get(
-      "http://localhost:8080/api/cart",
+      `${BASE_URL}/api/cart`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

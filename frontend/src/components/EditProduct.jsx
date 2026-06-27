@@ -9,6 +9,7 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+   const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
   const [formData, setFormData] = useState({
     name: "",
@@ -28,7 +29,7 @@ const EditProduct = () => {
       try {
         setLoading(true);
 
-        const res = await axios.get(`http://localhost:8080/api/products/${id}`);
+        const res = await axios.get(`${BASE_URL}/api/products/${id}`);
         const product = res.data.data;
 
         setFormData({
@@ -129,7 +130,7 @@ const EditProduct = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:8080/api/products/${id}`,
+        `${BASE_URL}/api/products/${id}`,
         updatedProductData,
         {
           headers: {

@@ -24,6 +24,7 @@ export default function Profile() {
   const [feedback, setFeedback] = useState({ type: "", message: "" });
   const [validationErrors, setValidationErrors] = useState({});
   const [capsLock, setCapsLock] = useState(false);
+   const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
   const getAuthConfig = () => {
     const token = localStorage.getItem("token");
@@ -41,7 +42,7 @@ export default function Profile() {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8080/api/users/profile", getAuthConfig());
+        const response = await axios.get(`${BASE_URL}/api/users/profile`, getAuthConfig());
         
         const user = response.data?.data || response.data;
         
@@ -137,7 +138,7 @@ export default function Profile() {
       };
       if (editForm.password) payload.password = editForm.password;
 
-      const response = await axios.put("http://localhost:8080/api/users/profile", payload, getAuthConfig());
+      const response = await axios.put(`${BASE_URL}/api/users/profile`, payload, getAuthConfig());
       const updatedUser = response.data?.data || response.data;
 
       const updatedState = {
