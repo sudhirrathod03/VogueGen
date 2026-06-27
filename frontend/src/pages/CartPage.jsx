@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
 
 
@@ -25,7 +26,7 @@ useEffect(() => {
   const fetchCart = async () => {
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.get("http://localhost:8080/api/cart", {
+      const { data } = await axios.get(`${BASE_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -42,7 +43,7 @@ useEffect(() => {
   const removeFromCart = async (productId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8080/api/cart/${productId}`, {
+      await axios.delete(`${BASE_URL}/api/cart/${productId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +62,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:8080/api/cart/${productId}`,
+        `${BASE_URL}/api/cart/${productId}`,
         { quantity },
         {
           headers: {

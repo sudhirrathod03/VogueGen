@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+   const BASE_URL= import.meta.env.VITE_BACKEND_URL
 const initialValues = {
   name: "",
   email: "",
@@ -14,6 +15,9 @@ export default function Signup() {
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
+
+  
+
   const errors = useMemo(() => {
     const nextErrors = {};
 
@@ -62,7 +66,7 @@ export default function Signup() {
   
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/auth/register",
+        `${BASE_URL}/api/auth/register`,
         values
       );
   

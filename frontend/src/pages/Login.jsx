@@ -9,6 +9,7 @@ function Login() {
   });
 
   const [errors, setErrors] = useState({});
+   const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
   const handleChange = (e) => {
     setFormData({
@@ -40,7 +41,7 @@ function Login() {
   
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/auth/login",
+        `${BASE_URL}/api/auth/login`,
         formData
       );
   
