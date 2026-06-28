@@ -15,8 +15,8 @@ function ProductDetails() {
   const [activeTab, setActiveTab] = useState("description");
    const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
-  // 1. Get the current user's ID from the JWT token
-  const token = localStorage.getItem("token"); // Make sure this matches your localStorage key
+
+  const token = localStorage.getItem("token"); 
   let currentUserId = null;
 
   if (token) {
