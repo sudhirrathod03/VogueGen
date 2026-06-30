@@ -5,26 +5,22 @@ import { useNavigate } from "react-router-dom";
 export default function Profile() {
   const navigate = useNavigate();
 
-  // Core E-Commerce Profile States
+  // Core E-Commerce Profile States (Aligned with Mongoose Schema)
   const [profileData, setProfileData] = useState({
     userId: "",
     createdAt: "",
     name: "",
-    email: "",
-    address: "",
-    moNumber: "",
-    isDefaultAddress: true,
-    isPrimaryPhone: true
+    email: ""
   });
 
   // UI Flow Control Systems
   const [activeSection, setActiveSection] = useState("overview"); // overview | edit
-  const [editForm, setEditForm] = useState({ name: "", email: "", password: "", address: "", moNumber: "", isDefaultAddress: true, isPrimaryPhone: true });
+  const [editForm, setEditForm] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
   const [validationErrors, setValidationErrors] = useState({});
   const [capsLock, setCapsLock] = useState(false);
-   const BASE_URL= import.meta.env.VITE_BACKEND_URL
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
   const getAuthConfig = () => {
     const token = localStorage.getItem("token");
@@ -52,22 +48,14 @@ export default function Profile() {
             ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) 
             : "N/A",
           name: user.name || "",
-          email: user.email || "",
-          address: user.address || "",
-          moNumber: user.moNumber || "",
-          isDefaultAddress: user.isDefaultAddress ?? true,
-          isPrimaryPhone: user.isPrimaryPhone ?? true
+          email: user.email || ""
         };
 
         setProfileData(structuredData);
         setEditForm({
           name: structuredData.name,
           email: structuredData.email,
-          password: "",
-          address: structuredData.address,
-          moNumber: structuredData.moNumber,
-          isDefaultAddress: structuredData.isDefaultAddress,
-          isPrimaryPhone: structuredData.isPrimaryPhone
+          password: ""
         });
       } catch (err) {
         console.error("Profile Synchronization Error:", err);
@@ -81,10 +69,10 @@ export default function Profile() {
   }, [navigate]);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setEditForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: value
     }));
     if (validationErrors[name]) {
       setValidationErrors((prev) => ({ ...prev, [name]: "" }));
@@ -108,12 +96,6 @@ export default function Profile() {
     } else if (!/\S+@\S+\.\S+/.test(editForm.email)) {
       errors.email = "Invalid email formatting syntax.";
     }
-    if (!editForm.address.trim()) errors.address = "Shipping address location is required.";
-    if (!editForm.moNumber.trim()) {
-      errors.moNumber = "Mobile number is required.";
-    } else if (!/^\+?[0-9\s-]{10,15}$/.test(editForm.moNumber.trim())) {
-      errors.moNumber = "Invalid contact numeric syntax.";
-    }
     if (editForm.password && editForm.password.length < 6) {
       errors.password = "Password must exceed 5 characters.";
     }
@@ -130,11 +112,7 @@ export default function Profile() {
     try {
       const payload = {
         name: editForm.name.trim(),
-        email: editForm.email.trim(),
-        address: editForm.address.trim(),
-        moNumber: editForm.moNumber.trim(),
-        isDefaultAddress: editForm.isDefaultAddress,
-        isPrimaryPhone: editForm.isPrimaryPhone
+        email: editForm.email.trim()
       };
       if (editForm.password) payload.password = editForm.password;
 
@@ -144,11 +122,7 @@ export default function Profile() {
       const updatedState = {
         ...profileData,
         name: updatedUser.name || editForm.name,
-        email: updatedUser.email || editForm.email,
-        address: updatedUser.address || editForm.address,
-        moNumber: updatedUser.moNumber || editForm.moNumber,
-        isDefaultAddress: updatedUser.isDefaultAddress ?? editForm.isDefaultAddress,
-        isPrimaryPhone: updatedUser.isPrimaryPhone ?? editForm.isPrimaryPhone
+        email: updatedUser.email || editForm.email
       };
       
       setProfileData(updatedState);
@@ -177,7 +151,6 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8 transition-all duration-300">
-      {/* BALANCED MEDIUM-SIZED CARD CONTAINER */}
       <div className="max-w-3xl mx-auto bg-white border border-gray-200/90 rounded-2xl shadow-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header Banner Section */}
@@ -239,20 +212,6 @@ export default function Profile() {
                   <span className="font-extrabold uppercase tracking-wider text-gray-400 text-[10px]">Email Mapping</span>
                   <span className="block font-semibold text-gray-900 mt-1 text-sm truncate">{profileData.email || "—"}</span>
                 </div>
-                <div>
-                  <span className="font-extrabold uppercase tracking-wider text-gray-400 text-[10px]">Mobile Connection</span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="font-semibold text-gray-900 text-sm">{profileData.moNumber || "—"}</span>
-                    {profileData.isPrimaryPhone && <span className="bg-blue-50 text-blue-600 px-1.5 py-0.5 text-[9px] uppercase font-bold rounded-md tracking-wider">Primary</span>}
-                  </div>
-                </div>
-                <div>
-                  <span className="font-extrabold uppercase tracking-wider text-gray-400 text-[10px]">Shipping Address Domain</span>
-                  <div className="mt-1">
-                    <span className="font-semibold text-gray-900 text-sm block leading-relaxed">{profileData.address || "—"}</span>
-                    {profileData.isDefaultAddress && <span className="inline-block bg-slate-100 text-slate-700 px-1.5 py-0.5 text-[9px] uppercase font-bold rounded-md mt-1 tracking-wider">Default Shipping</span>}
-                  </div>
-                </div>
               </div>
 
               <div className="flex justify-end pt-1">
@@ -300,34 +259,8 @@ export default function Profile() {
                   {validationErrors.email && <p className="text-rose-600 text-xs mt-1 font-semibold">{validationErrors.email}</p>}
                 </div>
 
-                {/* Mobile Contact Settings */}
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Mobile Contact</label>
-                  <input
-                    type="text"
-                    name="moNumber"
-                    value={editForm.moNumber}
-                    onChange={handleInputChange}
-                    className={`w-full bg-[#F8FAFC] border p-2.5 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 transition duration-150 ${
-                      validationErrors.moNumber ? "border-rose-400 focus:ring-rose-100" : "border-gray-200 focus:border-blue-500 focus:ring-blue-500/10"
-                    }`}
-                    placeholder="+91 XXXXX XXXXX"
-                  />
-                  <label className="flex items-center gap-2 mt-1.5 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      name="isPrimaryPhone"
-                      checked={editForm.isPrimaryPhone}
-                      onChange={handleInputChange}
-                      className="w-3.5 h-3.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500/20"
-                    />
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Set as primary phone alert</span>
-                  </label>
-                  {validationErrors.moNumber && <p className="text-rose-600 text-xs mt-1 font-semibold">{validationErrors.moNumber}</p>}
-                </div>
-
                 {/* Security Password Update with CapsLock Flag */}
-                <div>
+                <div className="sm:col-span-2">
                   <div className="flex justify-between items-center mb-1">
                     <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Security Password</label>
                     {editForm.password && (
@@ -351,31 +284,6 @@ export default function Profile() {
                   {validationErrors.password && <p className="text-rose-600 text-xs mt-1 font-semibold">{validationErrors.password}</p>}
                 </div>
 
-              </div>
-
-              {/* Physical Delivery Destination text field */}
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Permanent Location Address</label>
-                <textarea
-                  name="address"
-                  rows="2"
-                  value={editForm.address}
-                  onChange={handleInputChange}
-                  className={`w-full bg-[#F8FAFC] border p-2.5 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 transition duration-150 resize-none ${
-                    validationErrors.address ? "border-rose-400 focus:ring-rose-100" : "border-gray-200 focus:border-blue-500 focus:ring-blue-500/10"
-                  }`}
-                />
-                <label className="flex items-center gap-2 mt-1.5 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    name="isDefaultAddress"
-                    checked={editForm.isDefaultAddress}
-                    onChange={handleInputChange}
-                    className="w-3.5 h-3.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500/20"
-                  />
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Set as default 1-click checkout destination</span>
-                </label>
-                {validationErrors.address && <p className="text-rose-600 text-xs mt-1 font-semibold">{validationErrors.address}</p>}
               </div>
 
               {/* Action Buttons Row */}
