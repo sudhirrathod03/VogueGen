@@ -1,31 +1,26 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
-
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function CartPage() {
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const token = localStorage.getItem("token");
+  
+  const fetchCart = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login");
+      return;
+    }
 
-  if (!token) {
-    toast.error("Please login first");
-    navigate("/login");
-    return;
-  }
-
-  fetchCart();
-}, []);
-
-  const fetchCart = async () => {
     try {
-      const token = localStorage.getItem("token");
       const { data } = await axios.get(`${BASE_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,11 +29,26 @@ useEffect(() => {
       setCart(data.items || []);
     } catch (error) {
       console.error("Error fetching cart:", error);
+      
+     
+      if (error.response && error.response.status === 401) {
+        toast.error("Your session has expired. Please login again.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.dispatchEvent(new Event("authChanged")); 
+        navigate("/login");
+        return;
+      }
+      
       toast.error("Failed to load cart items");
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
 
   const removeFromCart = async (productId) => {
     try {
@@ -154,7 +164,6 @@ useEffect(() => {
 
                 {/* Quantity Controls & Row Total */}
                 <div className="flex items-center justify-between sm:justify-end gap-8 w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-100">
-                  {/* Plus/Minus Toggle */}
                   <div className="flex items-center border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
                     <button
                       onClick={() =>
@@ -180,14 +189,12 @@ useEffect(() => {
                     </button>
                   </div>
 
-                  {/* Desktop Only Subtotal per row */}
                   <div className="text-right hidden sm:block min-w-[7rem]">
                     <p className="text-lg font-bold text-gray-900">
                       ₹{item.product.price * item.quantity}
                     </p>
                   </div>
 
-                  {/* Trash Action Button */}
                   <button
                     onClick={() => removeFromCart(item.product._id)}
                     className="text-gray-400 hover:text-red-600 p-2 transition rounded-lg hover:bg-red-50"
