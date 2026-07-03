@@ -10,13 +10,27 @@ function Products() {
   const [categories, setCategories] = useState([]);
   const token = localStorage.getItem("token");
   const BASE_URL= import.meta.env.VITE_BACKEND_URL
+   const [debouncedSearch, setDebouncedSearch] = useState("");
+
+
+
+       useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search);
+        }, 500);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [search]);
 
 
   const fetchProducts = async () => {
     try {
+      console.log(`Fetching API for search term: "${debouncedSearch}"`);
       const res = await axios.get(`${BASE_URL}/api/products`, {
         params: {
-          search,
+          search : debouncedSearch,
           category,
           sort,
         },
@@ -34,7 +48,7 @@ function Products() {
 
   useEffect(() => {
     fetchProducts();
-  }, [search, category, sort]);
+  }, [debouncedSearch, category, sort]);
 
   return (
     <div className="min-h-screen bg-[#F7F9FC] p-8">
