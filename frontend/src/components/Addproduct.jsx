@@ -2,29 +2,31 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// Extracted to avoid repeating the object structure twice
+const INITIAL_STATE = {
+  name: "",
+  category: "",
+  brand: "",
+  price: "",
+  rating: "",
+  stock: "",
+  image: "",
+  description: "",
+  sizes: "",
+};
+
 const AddProduct = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-   const BASE_URL= import.meta.env.VITE_BACKEND_URL
+  const [formData, setFormData] = useState(INITIAL_STATE);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    brand: "",
-    price: "",
-    rating: "",
-    stock: "",
-    image: "",
-    description: "",
-    sizes: "",
-  });
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -96,7 +98,6 @@ const AddProduct = () => {
 
     try {
       setLoading(true);
-      // Fire a POST request instead of a PUT request
       const token = localStorage.getItem("token");
 
       await axios.post(
@@ -109,20 +110,13 @@ const AddProduct = () => {
         }
       );
 
-      // Clear the form fields after a successful post
-      setFormData({
-        name: "",
-        category: "",
-        brand: "",
-        price: "",
-        rating: "",
-        stock: "",
-        image: "",
-        description: "",
-        sizes: "",
-      });
+      // Set the success state so the user sees the confirmation banner
+      setSuccess("Product created successfully!");
+      
+      // Clear the form fields back to initial state
+      setFormData(INITIAL_STATE);
 
-      // Redirect user to the dashboard or products gallery view after a brief moment
+      // Redirect user after a brief moment
       setTimeout(() => {
         navigate("/products");
       }, 1500);
