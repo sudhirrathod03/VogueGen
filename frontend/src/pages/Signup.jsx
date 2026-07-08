@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
-import axios from 'axios'
-import { useNavigate } from "react-router-dom";
-   const BASE_URL= import.meta.env.VITE_BACKEND_URL
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+
+// Added a fallback to avoid errors if the env variable is missing
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
 const initialValues = {
   name: "",
   email: "",
@@ -14,9 +17,9 @@ export default function Signup() {
   const [values, setValues] = useState(initialValues);
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
   const navigate = useNavigate();
-
-  
 
   const errors = useMemo(() => {
     const nextErrors = {};
@@ -48,6 +51,8 @@ export default function Signup() {
       ...currentValues,
       [name]: value,
     }));
+    // Clear backend error when user starts typing again
+    if (apiError) setApiError("");
   };
 
   const handleBlur = (event) => {
@@ -60,26 +65,29 @@ export default function Signup() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitted(true);
-  
-    // Stop if validation errors exist
+    setApiError("");
+
     if (Object.keys(errors).length > 0) return;
-  
+
+    setIsLoading(true);
     try {
-      const res = await axios.post(
-        `${BASE_URL}/api/auth/register`,
-        values
-      );
-  
+      const res = await axios.post(`${BASE_URL}/api/auth/register`, values);
+
       localStorage.setItem("token", res.data.token);
-  
+
       setValues(initialValues);
       setTouched({});
       setSubmitted(false);
-  
-      // Redirect to login page
+
       navigate("/login");
     } catch (err) {
       console.error(err);
+      // Display backend error message or default to fallback text
+      setApiError(
+        err.response?.data?.message || "Something went wrong. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,9 +98,10 @@ export default function Signup() {
       <div className="w-full max-w-md">
         <div className="rounded-3xl bg-white px-5 py-5 shadow-lg shadow-primary-nav/10 sm:px-6 sm:py-6">
           <div className="mb-5 text-center">
-            <a href="/" className="mb-4 inline-block font-serif text-2xl font-bold tracking-tight text-primary-nav">
+            {/* Switched to Link to prevent full page refresh */}
+            <Link to="/" className="mb-4 inline-block font-serif text-2xl font-bold tracking-tight text-primary-nav">
               Vogue<span className="font-normal italic text-accent">Gen</span>
-            </a>
+            </Link>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Create Account
             </p>
@@ -104,6 +113,13 @@ export default function Signup() {
             </p>
           </div>
 
+          {/* Backend API Error Banner */}
+          {apiError && (
+            <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm font-medium text-red-600 border border-red-100">
+              {apiError}
+            </div>
+          )}
+
           <form className="space-y-3.5" noValidate onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="text-sm font-semibold text-text-main">
@@ -114,12 +130,13 @@ export default function Signup() {
                 name="name"
                 type="text"
                 autoComplete="name"
+                disabled={isLoading}
                 value={values.name}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 aria-invalid={Boolean(shouldShowError("name"))}
                 aria-describedby={shouldShowError("name") ? "name-error" : undefined}
-                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20"
+                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20 disabled:opacity-60"
                 placeholder="Enter your name"
               />
               {shouldShowError("name") && (
@@ -138,12 +155,13 @@ export default function Signup() {
                 name="email"
                 type="email"
                 autoComplete="email"
+                disabled={isLoading}
                 value={values.email}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 aria-invalid={Boolean(shouldShowError("email"))}
                 aria-describedby={shouldShowError("email") ? "email-error" : undefined}
-                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20"
+                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20 disabled:opacity-60"
                 placeholder="Enter your email"
               />
               {shouldShowError("email") && (
@@ -162,12 +180,13 @@ export default function Signup() {
                 name="password"
                 type="password"
                 autoComplete="new-password"
+                disabled={isLoading}
                 value={values.password}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 aria-invalid={Boolean(shouldShowError("password"))}
                 aria-describedby={shouldShowError("password") ? "password-error" : "password-help"}
-                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20"
+                className="mt-1.5 w-full rounded-2xl border border-transparent bg-[#F4F7FB] px-4 py-2.5 text-sm text-text-main outline-none transition placeholder:text-text-muted/60 hover:bg-white focus:bg-white focus:ring-2 focus:ring-accent/20 disabled:opacity-60"
                 placeholder="Enter a strong password"
               />
               {shouldShowError("password") ? (
@@ -183,32 +202,36 @@ export default function Signup() {
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-nav px-6 py-3 text-sm font-semibold tracking-wider text-white shadow-md shadow-primary-nav/15 transition hover:-translate-y-0.5 hover:bg-accent hover:shadow-lg hover:shadow-accent/20 focus:outline-none focus:ring-2 focus:ring-accent/25"
+              disabled={isLoading}
+              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-nav px-6 py-3 text-sm font-semibold tracking-wider text-white shadow-md shadow-primary-nav/15 transition hover:-translate-y-0.5 hover:bg-accent hover:shadow-lg hover:shadow-accent/20 focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:pointer-events-none disabled:opacity-60"
             >
-              <span>Sign Up</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
+              <span>{isLoading ? "Signing Up..." : "Sign Up"}</span>
+              {!isLoading && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              )}
             </button>
           </form>
 
           <p className="mt-5 text-center text-sm text-text-muted">
             Already have an account?{" "}
-            <a href="/login" className="font-semibold text-primary-nav hover:text-accent">
+            {/* Switched to Link to prevent full page refresh */}
+            <Link to="/login" className="font-semibold text-primary-nav hover:text-accent">
               Log in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
