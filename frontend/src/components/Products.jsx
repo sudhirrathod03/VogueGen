@@ -5,38 +5,37 @@ import { Link } from "react-router-dom";
 function Products() {
   const [product, setProduct] = useState([]);
   const [search, setSearch] = useState("");
+  const[loading, setLoading] = useState(true)
   const [category, setCategory] = useState("");
   const [sort, setSort] = useState("");
   const [categories, setCategories] = useState([]);
   const token = localStorage.getItem("token");
-  const BASE_URL= import.meta.env.VITE_BACKEND_URL
-   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
 
-
-       useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearch(search);
-        }, 500);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [search]);
-
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
 
   const fetchProducts = async () => {
     try {
       console.log(`Fetching API for search term: "${debouncedSearch}"`);
       const res = await axios.get(`${BASE_URL}/api/products`, {
         params: {
-          search : debouncedSearch,
+          search: debouncedSearch,
           category,
           sort,
         },
       });
 
       setProduct(res.data.data);
+      setLoading(false)
 
       if (categories.length === 0) {
         setCategories([...new Set(res.data.data.map((item) => item.category))]);
@@ -49,7 +48,17 @@ function Products() {
   useEffect(() => {
     fetchProducts();
   }, [debouncedSearch, category, sort]);
-
+  if (loading) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-[#185FA5]"></div>
+  
+        <p className="mt-4 text-lg font-medium text-gray-600">
+          Loading products...
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-[#F7F9FC] p-8">
       {/* Top Header Row with Product Count & Action Button */}
@@ -62,28 +71,27 @@ function Products() {
         </div>
 
         {/* Top-Right "+ Add Product" Link Action Button */}
-{token && (
-  <Link
-    to="/add-product"
-    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#185FA5] hover:bg-[#378ADD] text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-300 active:scale-95 whitespace-nowrap"
-  >
-    <svg
-      className="w-4 h-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      strokeWidth="2.5"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 4.5v15m7.5-7.5h-15"
-      />
-    </svg>
-
-    Create New Product
-  </Link>
-)}
+        {token && (
+          <Link
+            to="/add-product"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#185FA5] hover:bg-[#378ADD] text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-300 active:scale-95 whitespace-nowrap"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="2.5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            Create New Product
+          </Link>
+        )}
       </div>
 
       <div className="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row gap-4">
