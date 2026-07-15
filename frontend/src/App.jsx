@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Routes, Route, Navigate } from "react-router-dom";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   return (
@@ -67,7 +68,7 @@ function App() {
         closeOnClick
         pauseOnHover
       />
-
+      <Chatbot />
       <Footer />
     </div>
   );

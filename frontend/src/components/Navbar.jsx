@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Chatbot from "./Chatbot";
 const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
 
@@ -163,7 +164,6 @@ useEffect(() => {
 
         {/* Right Section: Dynamic Control Hub */}
         <div className="hidden md:flex items-center gap-6">
-
           {/* Authentication Workflow Area */}
           {!user ? (
             <div className="flex gap-3">
