@@ -20,25 +20,6 @@ const Footer = () => {
               </p>
             </div>
 
-            {/* Newsletter Subscription */}
-            <div className="space-y-3 max-w-sm">
-              <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
-                Stay Updated
-              </h4>
-              <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Enter your email" 
-                  className="bg-[#232321] text-xs text-white placeholder-[#6C6B66] px-3 py-2 rounded border border-[#3E3D3A] focus:outline-none focus:border-[#E4E3DE] w-full transition-colors duration-200"
-                />
-                <button 
-                  type="submit"
-                  className="bg-[#E4E3DE] text-[#2C2C2A] text-xs font-semibold px-4 py-2 rounded hover:bg-white transition-colors duration-200"
-                >
-                  Join
-                </button>
-              </form>
-            </div>
           </div>
 
           {/* Links Columns */}
