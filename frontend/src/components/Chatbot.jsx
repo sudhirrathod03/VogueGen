@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
+// Simple Robot Icon Component
+const RobotIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a3 3 0 013 3v2h1a2 2 0 012 2v2a2 2 0 01-2 2h-1v2a3 3 0 01-3 3H9a3 3 0 01-3-3v-2H5a2 2 0 01-2-2v-2a2 2 0 012-2h1V10a3 3 0 013-3h1V5.73A2 2 0 1112 2zm2.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+  </svg>
+);
+
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -68,10 +75,13 @@ export default function Chatbot() {
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans">
       {open && (
-        <div className="mb-3 flex h-[500px] w-[360px] flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-2xl">
+        <div className="mb-3 flex h-[500px] w-[360px] flex-col overflow-hidden rounded-xl border border-gray-300 bg-white shadow-2xl">
           {/* Header */}
           <div className="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
-            <span>Shopping Assistant</span>
+            <div className="flex items-center gap-2">
+              <RobotIcon className="h-5 w-5" />
+              <span>Shopping Assistant</span>
+            </div>
             <button
               onClick={() => setOpen(false)}
               aria-label="Close chat"
@@ -82,54 +92,72 @@ export default function Chatbot() {
           </div>
 
           {/* Chat Window */}
-          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
+          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4 bg-white">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`rounded-lg p-3 text-sm ${
-                  msg.role === "user"
-                    ? "ml-auto max-w-[80%] bg-blue-500 text-white"
-                    : "mr-auto max-w-[90%] bg-gray-100 text-black"
+                className={`flex gap-2 ${
+                  msg.role === "user" ? "ml-auto justify-end" : "mr-auto justify-start"
                 }`}
               >
-                {msg.role === "user" ? (
-                  msg.content
-                ) : (
-                  <div className="prose prose-sm max-w-none">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                {/* Bot Avatar */}
+                {msg.role !== "user" && (
+                  <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-black text-white mt-0.5">
+                    <RobotIcon className="h-4 w-4" />
                   </div>
                 )}
+                
+                <div
+                  className={`rounded-lg p-3 text-sm max-w-[80%] ${
+                    msg.role === "user"
+                      ? "bg-black text-white"
+                      : "border border-gray-300 bg-white text-black"
+                  }`}
+                >
+                  {msg.role === "user" ? (
+                    msg.content
+                  ) : (
+                    <div className="prose prose-sm max-w-none">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  )}
 
-                {msg.products && msg.products.length > 0 && (
-                  <div className="mt-2 flex flex-col gap-1.5">
-                    {msg.products.map((p) => (
-                      <div
-                        key={p.id}
-                        className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs text-black"
-                      >
-                        <strong>{p.name}</strong> — ${p.price}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                  {msg.products && msg.products.length > 0 && (
+                    <div className="mt-2 flex flex-col gap-1.5">
+                      {msg.products.map((p) => (
+                        <div
+                          key={p.id}
+                          className="rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs text-black"
+                        >
+                          <strong>{p.name}</strong> — ${p.price}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
             {isLoading && (
-              <div className="mr-auto max-w-[90%] rounded-lg bg-gray-100 p-3 text-sm text-gray-400">
-                AI is typing…
+              <div className="flex gap-2 mr-auto justify-start">
+                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-black text-white mt-0.5">
+                  <RobotIcon className="h-4 w-4" />
+                </div>
+                <div className="rounded-lg border border-gray-300 bg-white p-3 text-sm text-black max-w-[80%]">
+                  AI is typing…
+                </div>
               </div>
             )}
           </div>
 
           {/* Input Area */}
-          <div className="flex gap-2 border-t border-gray-200 p-3">
+          <div className="flex gap-2 border-t border-gray-200 p-3 bg-white">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={isLoading}
-              className="flex-1 rounded border p-2 text-black focus:outline-none focus:ring-2 focus:ring-black disabled:opacity-50"
+              className="flex-1 rounded border border-gray-300 p-2 text-black focus:outline-none focus:ring-2 focus:ring-black disabled:opacity-50"
               placeholder="Ask for a jacket..."
             />
             <button
@@ -149,7 +177,7 @@ export default function Chatbot() {
         aria-label="Toggle chat"
         className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-black text-2xl text-white shadow-lg hover:bg-gray-800"
       >
-        {open ? "×" : "💬"}
+        {open ? "×" : <RobotIcon className="h-7 w-7" />}
       </button>
     </div>
   );
