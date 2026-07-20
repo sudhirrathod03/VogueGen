@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Chatbot from "./Chatbot";
-const BASE_URL= import.meta.env.VITE_BACKEND_URL
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -11,16 +11,38 @@ export default function Navbar() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-const [user, setUser] = useState(() => {
-  const storedUser = localStorage.getItem("user");
-   
-  return storedUser
-    ? JSON.parse(storedUser)
-    : null;
-});
 
-  // for add to cart 
+  // Theme state initialized from localStorage or system preference
+  const [isDark, setIsDark] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      return savedTheme === "dark";
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
   const [cartCount, setCartCount] = useState(0);
+
+  // Sync theme with DOM document root & localStorage
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -35,90 +57,70 @@ const [user, setUser] = useState(() => {
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  
-const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
 
-  setUser(null);
-  setCartCount(0);
-  setIsDropdownOpen(false);
-  setIsOpen(false);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-  window.dispatchEvent(
-    new Event("authChanged")
-  );
+    setUser(null);
+    setCartCount(0);
+    setIsDropdownOpen(false);
+    setIsOpen(false);
 
-  navigate("/");
-};
+    window.dispatchEvent(new Event("authChanged"));
 
-useEffect(() => {
-  const handleAuthChange = () => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      setUser(null);
-    }
+    navigate("/");
   };
 
-  window.addEventListener(
-    "authChanged",
-    handleAuthChange
-  );
-
-  return () => {
-    window.removeEventListener(
-      "authChanged",
-      handleAuthChange
-    );
-  };
-}, []);
-
-// Add to cart 
   useEffect(() => {
-  fetchCartCount();
+    const handleAuthChange = () => {
+      const storedUser = localStorage.getItem("user");
 
-  window.addEventListener(
-    "cartUpdated",
-    fetchCartCount
-  );
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    };
 
-  return () => {
-    window.removeEventListener(
-      "cartUpdated",
-      fetchCartCount
-    );
-  };
-}, []);
+    window.addEventListener("authChanged", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("authChanged", handleAuthChange);
+    };
+  }, []);
+
+  // Fetch cart count logic
+  useEffect(() => {
+    fetchCartCount();
+
+    window.addEventListener("cartUpdated", fetchCartCount);
+
+    return () => {
+      window.removeEventListener("cartUpdated", fetchCartCount);
+    };
+  }, []);
 
   const fetchCartCount = async () => {
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!token) return;
+      if (!token) return;
 
-    const { data } = await axios.get(
-      `${BASE_URL}/api/cart`,
-      {
+      const { data } = await axios.get(`${BASE_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
+      });
 
-    const count =
-      data?.items?.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-      ) || 0;
+      const count =
+        data?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
-    setCartCount(count);
-  } catch (error) {
-    console.log(error);
-  }
-};
+      setCartCount(count);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const menuItems = [
     { label: "Home", href: "/" },
@@ -127,20 +129,20 @@ useEffect(() => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 transition-all duration-300 ease-in-out">
+    <header className="sticky top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-gray-800 transition-colors duration-300 ease-in-out">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
         {/* Logo Section */}
         <div className="flex items-center transform hover:scale-[1.02] active:scale-95 transition-all duration-200 ease-out">
           <Link
             to="/"
-            className="text-2xl font-extrabold font-serif text-blue-600 tracking-tight hover:opacity-90 transition-opacity"
+            className="text-2xl font-extrabold font-serif text-blue-600 dark:text-blue-400 tracking-tight hover:opacity-90 transition-opacity"
           >
-            Vogue<span className="font-normal italic text-blue-400">Gen</span>
+            Vogue<span className="font-normal italic text-blue-400 dark:text-blue-300">Gen</span>
           </Link>
         </div>
 
-        {/* Center Section: Balanced Desktop Links */}
+        {/* Center Section: Navigation Links */}
         <nav className="hidden md:block">
           <ul className="flex gap-10">
             {menuItems.map((item) => (
@@ -148,10 +150,10 @@ useEffect(() => {
                 <NavLink
                   to={item.href}
                   className={({ isActive }) =>
-                    `text-xs font-bold uppercase tracking-wider transition-all duration-300 relative pb-1.5 block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 ${
+                    `text-xs font-bold uppercase tracking-wider transition-all duration-300 relative pb-1.5 block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-blue-600 dark:after:bg-blue-400 after:transition-all after:duration-300 ${
                       isActive
-                        ? "text-blue-600 after:w-full"
-                        : "text-gray-600 hover:text-blue-600 after:w-0 hover:after:w-full"
+                        ? "text-blue-600 dark:text-blue-400 after:w-full"
+                        : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 after:w-0 hover:after:w-full"
                     }`
                   }
                 >
@@ -162,21 +164,41 @@ useEffect(() => {
           </ul>
         </nav>
 
-        {/* Right Section: Dynamic Control Hub */}
-        <div className="hidden md:flex items-center gap-6">
+        {/* Right Section: Actions & Theme Toggle */}
+        <div className="hidden md:flex items-center gap-5">
+          
+          {/* Dark / Light Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark/light theme"
+            className="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900 transform hover:scale-105 active:scale-95 transition-all duration-200 ease-out shadow-sm"
+          >
+            {isDark ? (
+              /* Sun Icon (shown in Dark mode) */
+              <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21m8.966-8.966h-2.25m-13.5 0H3m15.364 6.364l-1.591-1.591M6.758 6.758L5.167 5.167m12.728 0l-1.591 1.591M6.758 17.242l-1.591 1.591M12 18a6 6 0 100-12 6 6 0 000 12z" />
+              </svg>
+            ) : (
+              /* Moon Icon (shown in Light mode) */
+              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+              </svg>
+            )}
+          </button>
+
           {/* Authentication Workflow Area */}
           {!user ? (
             <div className="flex gap-3">
               <Link
                 to="/login"
-                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 ease-out shadow-sm"
+                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 ease-out shadow-sm"
               >
                 Login
               </Link>
 
               <Link
                 to="/signup"
-                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-white bg-blue-600 rounded-xl hover:bg-blue-700 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 ease-out shadow-sm hover:shadow-md"
+                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-white bg-blue-600 dark:bg-blue-500 rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 ease-out shadow-sm hover:shadow-md"
               >
                 Signup
               </Link>
@@ -185,7 +207,7 @@ useEffect(() => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50/30 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-blue-100 transform hover:scale-105 active:scale-95 transition-all duration-200 ease-out shadow-sm"
+                className="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900 transform hover:scale-105 active:scale-95 transition-all duration-200 ease-out shadow-sm"
                 aria-label="User profile options"
                 aria-haspopup="true"
                 aria-expanded={isDropdownOpen}
@@ -195,25 +217,22 @@ useEffect(() => {
                 </svg>
               </button>
 
-              {/* Enhanced Zoom-In Profile Dropdown Menu Card */}
+              {/* Profile Dropdown */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3.5 w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-2 transform origin-top-right transition-all duration-300 ease-out animate-in fade-in zoom-in-95 slide-in-from-top-3 z-50">
-                  
-                  {/* Visual Hierarchy Identity Info Cluster */}
-                  <div className="px-3.5 py-3 border-b border-gray-100 mb-1.5 bg-gray-50/50 rounded-xl">
-                    <p className="text-sm font-bold text-gray-900 tracking-tight truncate">
+                <div className="absolute right-0 mt-3.5 w-64 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-2 transform origin-top-right transition-all duration-300 ease-out animate-in fade-in zoom-in-95 slide-in-from-top-3 z-50">
+                  <div className="px-3.5 py-3 border-b border-gray-100 dark:border-gray-800 mb-1.5 bg-gray-50/50 dark:bg-gray-800/50 rounded-xl">
+                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100 tracking-tight truncate">
                       {user?.name}
                     </p>
-                    <p className="text-xs text-gray-400 truncate mt-0.5 font-medium">
+                    <p className="text-xs text-gray-400 dark:text-gray-400 truncate mt-0.5 font-medium">
                       {user?.email}
                     </p>
                   </div>
 
-                  {/* Dropdown Items Navigation Stack */}
-                  <div className="space-y-0.5 text-xs font-bold uppercase tracking-wider text-gray-700">
+                  <div className="space-y-0.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 hover:text-blue-600 transition-all duration-150"
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-150"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -224,7 +243,7 @@ useEffect(() => {
 
                     <Link
                       to="/profile"
-                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 hover:text-blue-600 transition-all duration-150"
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-150"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -235,7 +254,7 @@ useEffect(() => {
 
                     <Link
                       to="/add-product"
-                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 hover:text-blue-600 transition-all duration-150"
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-150"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -245,11 +264,10 @@ useEffect(() => {
                     </Link>
                   </div>
 
-                  {/* Redesigned Destructive Logout Action Container */}
-                  <div className="border-t border-gray-100 mt-1.5 pt-1">
+                  <div className="border-t border-gray-100 dark:border-gray-800 mt-1.5 pt-1">
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-red-600 hover:bg-red-50 rounded-xl text-left transition-all duration-150"
+                      className="w-full flex items-center gap-3 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl text-left transition-all duration-150"
                     >
                       <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 01-3-3h4a3 3 0 013 3v1" />
@@ -262,10 +280,10 @@ useEffect(() => {
             </div>
           )}
 
-          {/* Cart Icon Button with Advanced Scaling & Hover Transitions */}
+          {/* Cart Icon Button */}
           <Link
             to="/cart"
-            className="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:text-blue-600 border border-transparent hover:border-gray-100 transform hover:scale-110 active:scale-90 transition-all duration-300 ease-out relative group"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 transform hover:scale-110 active:scale-90 transition-all duration-300 ease-out relative group"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -283,45 +301,63 @@ useEffect(() => {
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-{cartCount > 0 && (
-  <span className="absolute top-0.5 right-0.5 bg-blue-600 text-white text-[9px] font-bold min-w-4 h-4 rounded-full flex items-center justify-center p-0.5 shadow-sm">
-    {cartCount}
-  </span>
-)}
+            {cartCount > 0 && (
+              <span className="absolute top-0.5 right-0.5 bg-blue-600 dark:bg-blue-500 text-white text-[9px] font-bold min-w-4 h-4 rounded-full flex items-center justify-center p-0.5 shadow-sm">
+                {cartCount}
+              </span>
+            )}
           </Link>
         </div>
 
-        {/* Mobile Layout Control Toggle Button */}
-        <button
-          className="md:hidden w-10 h-10 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 active:scale-90 transition-all duration-200 ease-out"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle Navigation Menu"
-        >
-          <span className="text-xl font-medium">{isOpen ? "✕" : "☰"}</span>
-        </button>
+        {/* Mobile Navigation Toggle Button */}
+        <div className="md:hidden flex items-center gap-3">
+          {/* Mobile Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="w-9 h-9 rounded-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 flex items-center justify-center active:scale-90 transition-all duration-200 ease-out"
+          >
+            {isDark ? (
+              <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21m8.966-8.966h-2.25m-13.5 0H3m15.364 6.364l-1.591-1.591M6.758 6.758L5.167 5.167m12.728 0l-1.591 1.591M6.758 17.242l-1.591 1.591M12 18a6 6 0 100-12 6 6 0 000 12z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+              </svg>
+            )}
+          </button>
+
+          <button
+            className="w-10 h-10 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-90 transition-all duration-200 ease-out"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Navigation Menu"
+          >
+            <span className="text-xl font-medium">{isOpen ? "✕" : "☰"}</span>
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Responsive Navigation Drawer */}
+      {/* Mobile Responsive Menu Drawer */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-6 py-5 flex flex-col gap-4 shadow-inner transform origin-top transition-all duration-300 ease-out animate-in fade-in slide-in-from-top-4">
+        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 px-6 py-5 flex flex-col gap-4 shadow-inner transform origin-top transition-all duration-300 ease-out animate-in fade-in slide-in-from-top-4">
           {menuItems.map((item) => (
             <Link
               key={item.label}
               to={item.href}
               onClick={() => setIsOpen(false)}
-              className="text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-blue-600 transition-colors duration-150"
+              className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-150"
             >
               {item.label}
             </Link>
           ))}
 
-          {/* Conditional Mobile Auth Handling */}
           {!user ? (
-            <div className="flex flex-col gap-3.5 pt-3.5 border-t border-gray-100">
+            <div className="flex flex-col gap-3.5 pt-3.5 border-t border-gray-100 dark:border-gray-800">
               <Link
                 to="/login"
                 onClick={() => setIsOpen(false)}
-                className="text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-blue-600"
+                className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Login
               </Link>
@@ -335,11 +371,11 @@ useEffect(() => {
               </Link>
             </div>
           ) : (
-            <div className="flex flex-col gap-3.5 pt-3.5 border-t border-gray-100 text-xs font-bold uppercase tracking-wider text-gray-700">
+            <div className="flex flex-col gap-3.5 pt-3.5 border-t border-gray-100 dark:border-gray-800 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
               <Link
                 to="/dashboard"
                 onClick={() => setIsOpen(false)}
-                className="hover:text-blue-600 transition-colors"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
                 Dashboard
               </Link>
@@ -347,7 +383,7 @@ useEffect(() => {
               <Link
                 to="/profile"
                 onClick={() => setIsOpen(false)}
-                className="hover:text-blue-600 transition-colors"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
                 Profile
               </Link>
@@ -355,25 +391,25 @@ useEffect(() => {
               <Link
                 to="/add-product"
                 onClick={() => setIsOpen(false)}
-                className="hover:text-blue-600 transition-colors"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
                 Add Product
               </Link>
 
               <button
                 onClick={handleLogout}
-                className="text-left text-xs font-bold uppercase tracking-wider text-red-500 pt-3 border-t border-gray-100"
+                className="text-left text-xs font-bold uppercase tracking-wider text-red-500 pt-3 border-t border-gray-100 dark:border-gray-800"
               >
                 Logout ({user?.name})
               </button>
             </div>
           )}
 
-          <div className="border-t border-gray-100 pt-4">
+          <div className="border-t border-gray-100 dark:border-gray-800 pt-4">
             <Link
               to="/cart"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-blue-600"
+              className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
             >
               🛒 Cart ({cartCount})
             </Link>
