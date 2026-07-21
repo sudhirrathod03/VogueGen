@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import Chatbot from "./Chatbot";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dropdownRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Theme state initialized from localStorage or system preference
+  // 1. Theme State Initialization
   const [isDark, setIsDark] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      return savedTheme === "dark";
-    }
+    if (savedTheme) return savedTheme === "dark";
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
@@ -27,6 +25,12 @@ export default function Navbar() {
   });
 
   const [cartCount, setCartCount] = useState(0);
+
+  // Automatically close menus on navigation
+  useEffect(() => {
+    setIsOpen(false);
+    setIsDropdownOpen(false);
+  }, [location.pathname]);
 
   // Sync theme with DOM document root & localStorage
   useEffect(() => {
@@ -40,10 +44,9 @@ export default function Navbar() {
     }
   }, [isDark]);
 
-  const toggleTheme = () => {
-    setIsDark((prev) => !prev);
-  };
+  const toggleTheme = () => setIsDark((prev) => !prev);
 
+  // Close profile dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -58,6 +61,51 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Listen to Auth State Changes
+  useEffect(() => {
+    const handleAuthChange = () => {
+      const storedUser = localStorage.getItem("user");
+      setUser(storedUser ? JSON.parse(storedUser) : null);
+    };
+
+    window.addEventListener("authChanged", handleAuthChange);
+    return () => window.removeEventListener("authChanged", handleAuthChange);
+  }, []);
+
+  // 2. Wrap fetchCartCount in useCallback
+  const fetchCartCount = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setCartCount(0);
+        return;
+      }
+
+      const { data } = await axios.get(`${BASE_URL}/api/cart`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const count =
+        data?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+
+      setCartCount(count);
+    } catch (error) {
+      console.error("Failed to fetch cart count:", error);
+    }
+  }, []);
+
+  // Sync Cart Count
+  useEffect(() => {
+    fetchCartCount();
+    window.addEventListener("cartUpdated", fetchCartCount);
+    window.addEventListener("authChanged", fetchCartCount);
+
+    return () => {
+      window.removeEventListener("cartUpdated", fetchCartCount);
+      window.removeEventListener("authChanged", fetchCartCount);
+    };
+  }, [fetchCartCount]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -68,58 +116,7 @@ export default function Navbar() {
     setIsOpen(false);
 
     window.dispatchEvent(new Event("authChanged"));
-
     navigate("/");
-  };
-
-  useEffect(() => {
-    const handleAuthChange = () => {
-      const storedUser = localStorage.getItem("user");
-
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      } else {
-        setUser(null);
-      }
-    };
-
-    window.addEventListener("authChanged", handleAuthChange);
-
-    return () => {
-      window.removeEventListener("authChanged", handleAuthChange);
-    };
-  }, []);
-
-  // Fetch cart count logic
-  useEffect(() => {
-    fetchCartCount();
-
-    window.addEventListener("cartUpdated", fetchCartCount);
-
-    return () => {
-      window.removeEventListener("cartUpdated", fetchCartCount);
-    };
-  }, []);
-
-  const fetchCartCount = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) return;
-
-      const { data } = await axios.get(`${BASE_URL}/api/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const count =
-        data?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-
-      setCartCount(count);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const menuItems = [
@@ -132,7 +129,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-gray-800 transition-colors duration-300 ease-in-out">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
-        {/* Logo Section */}
+        {/* Logo */}
         <div className="flex items-center transform hover:scale-[1.02] active:scale-95 transition-all duration-200 ease-out">
           <Link
             to="/"
@@ -142,7 +139,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center Section: Navigation Links */}
+        {/* Navigation Links (Desktop) */}
         <nav className="hidden md:block">
           <ul className="flex gap-10">
             {menuItems.map((item) => (
@@ -164,29 +161,27 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Right Section: Actions & Theme Toggle */}
+        {/* Right Section Actions */}
         <div className="hidden md:flex items-center gap-5">
-          
-          {/* Dark / Light Theme Toggle Button */}
+
+          {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            aria-label="Toggle dark/light theme"
+            aria-label="Toggle dark or light mode"
             className="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900 transform hover:scale-105 active:scale-95 transition-all duration-200 ease-out shadow-sm"
           >
             {isDark ? (
-              /* Sun Icon (shown in Dark mode) */
               <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21m8.966-8.966h-2.25m-13.5 0H3m15.364 6.364l-1.591-1.591M6.758 6.758L5.167 5.167m12.728 0l-1.591 1.591M6.758 17.242l-1.591 1.591M12 18a6 6 0 100-12 6 6 0 000 12z" />
               </svg>
             ) : (
-              /* Moon Icon (shown in Light mode) */
               <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
               </svg>
             )}
           </button>
 
-          {/* Authentication Workflow Area */}
+          {/* Auth State */}
           {!user ? (
             <div className="flex gap-3">
               <Link
@@ -195,7 +190,6 @@ export default function Navbar() {
               >
                 Login
               </Link>
-
               <Link
                 to="/signup"
                 className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-white bg-blue-600 dark:bg-blue-500 rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 ease-out shadow-sm hover:shadow-md"
@@ -206,7 +200,7 @@ export default function Navbar() {
           ) : (
             <div className="relative" ref={dropdownRef}>
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
                 className="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900 transform hover:scale-105 active:scale-95 transition-all duration-200 ease-out shadow-sm"
                 aria-label="User profile options"
                 aria-haspopup="true"
@@ -219,7 +213,7 @@ export default function Navbar() {
 
               {/* Profile Dropdown */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3.5 w-64 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-2 transform origin-top-right transition-all duration-300 ease-out animate-in fade-in zoom-in-95 slide-in-from-top-3 z-50">
+                <div className="absolute right-0 mt-3.5 w-64 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-2 transform origin-top-right transition-all duration-300 ease-out z-50">
                   <div className="px-3.5 py-3 border-b border-gray-100 dark:border-gray-800 mb-1.5 bg-gray-50/50 dark:bg-gray-800/50 rounded-xl">
                     <p className="text-sm font-bold text-gray-900 dark:text-gray-100 tracking-tight truncate">
                       {user?.name}
@@ -233,7 +227,6 @@ export default function Navbar() {
                     <Link
                       to="/dashboard"
                       className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-150"
-                      onClick={() => setIsDropdownOpen(false)}
                     >
                       <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V16zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V16z" />
@@ -244,7 +237,6 @@ export default function Navbar() {
                     <Link
                       to="/profile"
                       className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-150"
-                      onClick={() => setIsDropdownOpen(false)}
                     >
                       <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -255,7 +247,6 @@ export default function Navbar() {
                     <Link
                       to="/add-product"
                       className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-blue-50/60 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-150"
-                      onClick={() => setIsDropdownOpen(false)}
                     >
                       <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -280,9 +271,10 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Cart Icon Button */}
+          {/* Cart Icon */}
           <Link
             to="/cart"
+            aria-label={`Shopping Cart with ${cartCount} items`}
             className="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 transform hover:scale-110 active:scale-90 transition-all duration-300 ease-out relative group"
           >
             <svg
@@ -309,12 +301,11 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Navigation Toggle Button */}
+        {/* Mobile Navigation Controls */}
         <div className="md:hidden flex items-center gap-3">
-          {/* Mobile Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            aria-label="Toggle theme"
+            aria-label="Toggle dark or light theme"
             className="w-9 h-9 rounded-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 flex items-center justify-center active:scale-90 transition-all duration-200 ease-out"
           >
             {isDark ? (
@@ -330,22 +321,30 @@ export default function Navbar() {
 
           <button
             className="w-10 h-10 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-90 transition-all duration-200 ease-out"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle Navigation Menu"
+            onClick={() => setIsOpen((prev) => !prev)}
+            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isOpen}
           >
-            <span className="text-xl font-medium">{isOpen ? "✕" : "☰"}</span>
+            {isOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Responsive Menu Drawer */}
+      {/* Mobile Drawer Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 px-6 py-5 flex flex-col gap-4 shadow-inner transform origin-top transition-all duration-300 ease-out animate-in fade-in slide-in-from-top-4">
+        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 px-6 py-5 flex flex-col gap-4 shadow-inner transform origin-top transition-all duration-300 ease-out">
           {menuItems.map((item) => (
             <Link
               key={item.label}
               to={item.href}
-              onClick={() => setIsOpen(false)}
               className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-150"
             >
               {item.label}
@@ -356,7 +355,6 @@ export default function Navbar() {
             <div className="flex flex-col gap-3.5 pt-3.5 border-t border-gray-100 dark:border-gray-800">
               <Link
                 to="/login"
-                onClick={() => setIsOpen(false)}
                 className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Login
@@ -364,7 +362,6 @@ export default function Navbar() {
 
               <Link
                 to="/signup"
-                onClick={() => setIsOpen(false)}
                 className="text-xs font-bold uppercase tracking-wider text-blue-500 hover:text-blue-600"
               >
                 Signup
@@ -372,27 +369,13 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex flex-col gap-3.5 pt-3.5 border-t border-gray-100 dark:border-gray-800 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-              <Link
-                to="/dashboard"
-                onClick={() => setIsOpen(false)}
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
+              <Link to="/dashboard" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 Dashboard
               </Link>
-
-              <Link
-                to="/profile"
-                onClick={() => setIsOpen(false)}
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
+              <Link to="/profile" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 Profile
               </Link>
-
-              <Link
-                to="/add-product"
-                onClick={() => setIsOpen(false)}
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
+              <Link to="/add-product" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 Add Product
               </Link>
 
@@ -408,7 +391,6 @@ export default function Navbar() {
           <div className="border-t border-gray-100 dark:border-gray-800 pt-4">
             <Link
               to="/cart"
-              onClick={() => setIsOpen(false)}
               className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
             >
               🛒 Cart ({cartCount})
