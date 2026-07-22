@@ -135,11 +135,11 @@ function Products() {
         )}
       </div>
 
-      {/* Modern Filter Controls Toolbar - Sticky on Desktop scroll */}
-      <div className="max-w-6xl mx-auto bg-white border border-gray-100 rounded-2xl p-3.5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] mb-8 sticky top-4 z-40 backdrop-blur-md bg-white/95">
+      {/* Filter Toolbar — sticky offset adjusted so it doesn't overlap global navbar */}
+      <div className="max-w-6xl mx-auto bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl p-3.5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] mb-8 sticky top-20 z-30">
         <div className="flex flex-col lg:flex-row gap-3 items-center">
           
-          {/* Main Integrated Search Field */}
+          {/* Search Input */}
           <div className="relative w-full lg:flex-1">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
               <Search className="w-4 h-4" />
@@ -153,10 +153,10 @@ function Products() {
             />
           </div>
 
-          {/* Controls Container Group */}
+          {/* Controls Group */}
           <div className="flex flex-col sm:flex-row w-full lg:w-auto items-center gap-3">
             
-            {/* Custom Category Selection Button */}
+            {/* Category Dropdown */}
             <div className="relative w-full sm:w-56" ref={categoryDropdownRef}>
               <button
                 type="button"
@@ -173,7 +173,7 @@ function Products() {
               </button>
 
               {isCategoryOpen && (
-                <div className="absolute left-0 right-0 z-50 mt-2 bg-white border border-gray-100 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] max-h-60 overflow-y-auto py-1.5 animate-in fade-in slide-in-from-top-1 duration-100">
+                <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-white border border-gray-100 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] max-h-60 overflow-y-auto py-1.5 animate-in fade-in slide-in-from-top-1 duration-100">
                   <button
                     type="button"
                     onClick={() => { setCategory(""); setIsCategoryOpen(false); }}
@@ -200,7 +200,7 @@ function Products() {
               )}
             </div>
 
-            {/* Reconstructed Sort Button Dropdown */}
+            {/* Sort Dropdown */}
             <div className="relative w-full sm:w-48" ref={sortDropdownRef}>
               <button
                 type="button"
@@ -215,7 +215,7 @@ function Products() {
               </button>
 
               {isSortOpen && (
-                <div className="absolute right-0 left-0 z-50 mt-2 bg-white border border-gray-100 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] py-1.5 animate-in fade-in slide-in-from-top-1 duration-100">
+                <div className="absolute top-full right-0 left-0 z-50 mt-2 bg-white border border-gray-100 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] py-1.5 animate-in fade-in slide-in-from-top-1 duration-100">
                   {sortOptions.map((option) => (
                     <button
                       key={option.value}
@@ -234,13 +234,12 @@ function Products() {
         </div>
       </div>
 
-      {/* Grid Layout Container */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-0">
+      {/* Grid Layout */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
         {product.map((prod) => (
           <Link to={`/products/${prod._id}`} key={prod._id} className="block group">
             <div className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.07)] transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
               
-              {/* Image Frame Wrapper */}
               <div className="relative overflow-hidden w-full h-64 bg-gray-50/50">
                 <img
                   src={prod.image}
@@ -250,7 +249,6 @@ function Products() {
                 />
               </div>
 
-              {/* Contents Frame Wrapper */}
               <div className="p-5 flex flex-col flex-grow">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="inline-flex items-center gap-1.5 bg-gray-50 text-gray-500 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border border-gray-100">
@@ -267,7 +265,6 @@ function Products() {
                   {prod.description}
                 </p>
 
-                {/* Card Action Footer Row */}
                 <div className="mt-auto flex items-center justify-between pt-3.5 border-t border-gray-50">
                   <span className="text-xs font-bold text-[#185FA5] group-hover:text-[#144F8A] transition-colors tracking-tight">
                     View Details
@@ -282,7 +279,7 @@ function Products() {
         ))}
       </div>
 
-      {/* Empty State Fallback Screen */}
+      {/* Empty State */}
       {product.length === 0 && (
         <div className="max-w-md mx-auto mt-16 p-8 text-center bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-gray-100">
           <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center mx-auto mb-3.5">
