@@ -1,9 +1,9 @@
-// We only import Mail and MessageSquare (which is a generic chat bubble) from lucide-react
+import React from "react";
 import { MessageSquare, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#2C2C2A] text-[#E4E3DE] pt-16 px-6 pb-8 border-t border-[#3E3D3A]">
+    <footer className="bg-[#2C2C2A] dark:bg-gray-950 text-[#E4E3DE] dark:text-gray-300 pt-16 px-6 pb-8 border-t border-[#3E3D3A] dark:border-gray-800 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         
         {/* Main Grid Section */}
@@ -13,13 +13,12 @@ const Footer = () => {
           <div className="md:col-span-5 space-y-6 text-left">
             <div className="space-y-3">
               <h2 className="font-serif text-2xl font-bold text-white tracking-tight">
-                Vogue<span className="font-normal italic text-accent">Gen</span>
+                Vogue<span className="font-normal italic text-blue-400 dark:text-blue-500">Gen</span>
               </h2>
-              <p className="text-xs text-[#8C8B85] max-w-xs leading-relaxed">
+              <p className="text-xs text-[#8C8B85] dark:text-gray-400 max-w-xs leading-relaxed">
                 Bringing next-generation fashion rendering and artificial intelligence styling straight to your wardrobe.
               </p>
             </div>
-
           </div>
 
           {/* Links Columns */}
@@ -30,7 +29,7 @@ const Footer = () => {
               <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
                 Explore
               </h3>
-              <ul className="flex flex-col gap-2.5 text-xs text-[#8C8B85]">
+              <ul className="flex flex-col gap-2.5 text-xs text-[#8C8B85] dark:text-gray-400">
                 <li>
                   <a href="#" className="hover:text-white transition-colors duration-200">Home</a>
                 </li>
@@ -48,7 +47,7 @@ const Footer = () => {
               <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
                 Legal
               </h3>
-              <ul className="flex flex-col gap-2.5 text-xs text-[#8C8B85]">
+              <ul className="flex flex-col gap-2.5 text-xs text-[#8C8B85] dark:text-gray-400">
                 <li>
                   <a href="#" className="hover:text-white transition-colors duration-200">Privacy Policy</a>
                 </li>
@@ -63,7 +62,7 @@ const Footer = () => {
               <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
                 Community
               </h3>
-              <ul className="flex flex-col gap-2.5 text-xs text-[#8C8B85]">
+              <ul className="flex flex-col gap-2.5 text-xs text-[#8C8B85] dark:text-gray-400">
                 <li>
                   <a 
                     href="https://github.com/sudhirrathod03/VogueGen" 
@@ -95,18 +94,18 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="pt-8 border-t border-[#3E3D3A] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[#8C8B85]">
+        <div className="pt-8 border-t border-[#3E3D3A] dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[#8C8B85] dark:text-gray-400">
           <div className="flex items-center gap-4">
             <p>&copy; {new Date().getFullYear()} VogueGen. All rights reserved.</p>
             
             {/* System Status Dot */}
-            <div className="hidden sm:flex items-center gap-1.5 bg-[#232321] px-2 py-0.5 rounded border border-[#3E3D3A] text-[10px]">
+            <div className="hidden sm:flex items-center gap-1.5 bg-[#232321] dark:bg-gray-900 px-2 py-0.5 rounded border border-[#3E3D3A] dark:border-gray-800 text-[10px]">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>Systems Normal</span>
             </div>
           </div>
           
-          <p className="text-[10px] tracking-wider uppercase text-[#6C6B66]">Built for next-gen fashion</p>
+          <p className="text-[10px] tracking-wider uppercase text-[#6C6B66] dark:text-gray-500">Built for next-gen fashion</p>
         </div>
 
       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { useTheme } from "../context/ThemeContext"; // 1. Import Theme Context
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -12,12 +13,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // 1. Theme State Initialization
-  const [isDark, setIsDark] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) return savedTheme === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  // 2. Consume Theme Context instead of local state
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
 
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,20 +29,6 @@ export default function Navbar() {
     setIsOpen(false);
     setIsDropdownOpen(false);
   }, [location.pathname]);
-
-  // Sync theme with DOM document root & localStorage
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [isDark]);
-
-  const toggleTheme = () => setIsDark((prev) => !prev);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -72,7 +56,7 @@ export default function Navbar() {
     return () => window.removeEventListener("authChanged", handleAuthChange);
   }, []);
 
-  // 2. Wrap fetchCartCount in useCallback
+  // Fetch cart count callback
   const fetchCartCount = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");

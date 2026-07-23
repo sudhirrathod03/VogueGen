@@ -16,10 +16,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import Chatbot from "./components/Chatbot";
-
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-bg-page">
+    // Update bg-bg-page to include dark background classes and text transitions
+    <div className="min-h-screen flex flex-col bg-bg-page dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <Navbar />
 
       <main className="max-w-7xl w-full mx-auto px-4 md:px-8 py-8 grow">
@@ -73,5 +73,7 @@ function App() {
     </div>
   );
 }
+
+
 
 export default App;
